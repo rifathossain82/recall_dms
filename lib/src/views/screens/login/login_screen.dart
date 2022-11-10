@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recall/routes/route.dart';
 import 'package:recall/src/controllers/login_controller.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
@@ -12,30 +13,12 @@ import 'package:recall/src/views/base/k_scroll_behavior.dart';
 import 'package:recall/src/views/base/k_text_field.dart';
 import 'package:recall/src/views/screens/login/components/forgot_password_button.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatelessWidget {
+  LoginScreen({Key? key}) : super(key: key);
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailOrPhoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  late LoginController loginController;
-
-  @override
-  void initState() {
-    loginController = Get.put(LoginController());
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    emailOrPhoneController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
+  final LoginController loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -132,12 +115,13 @@ class _LoginScreenState extends State<LoginScreen> {
         'Login',
         style: GoogleFonts.roboto(
             textStyle: h3.copyWith(
-          color: kWhite,
-          fontWeight: FontWeight.w500,
-        )),
+              color: kWhite,
+              fontWeight: FontWeight.w500,
+            )),
       ));
 
-  void _loginMethod() {}
-
+  void _loginMethod()=> Get.offAllNamed(RouteGenerator.dashboard);
 
 }
+
+
