@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:recall/src/controllers/tmtl_controller.dart';
 import 'package:recall/src/services/fack_data.dart';
+import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
@@ -11,6 +12,7 @@ import 'package:recall/src/views/base/k_appbar.dart';
 import 'package:recall/src/views/base/k_scroll_behavior.dart';
 import 'package:recall/src/views/screens/tmtl/components/tabBar_item.dart';
 import 'package:recall/src/views/screens/tmtl/components/tmtl_item_card.dart';
+import 'package:recall/src/services/extensions/build_context_extension.dart';
 
 class TMTLListScreen extends StatelessWidget {
   TMTLListScreen({Key? key}) : super(key: key);
@@ -24,7 +26,7 @@ class TMTLListScreen extends StatelessWidget {
         child: Column(
           children: [
             /// appBar content
-            _buildTMTLAppBar(),
+            _buildTMTLAppBar(context),
 
             /// body content
             Expanded(child: _buildTMTLBody()),
@@ -34,9 +36,9 @@ class TMTLListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTMTLAppBar() => KAppBar(
+  Widget _buildTMTLAppBar(BuildContext context) => KAppBar(
         leading: GestureDetector(
-          onTap: () => Get.back(),
+          onTap: () => context.popScreen(),
           child: Padding(
             padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
             child: Icon(
@@ -56,9 +58,9 @@ class TMTLListScreen extends StatelessWidget {
             onTap: () {},
             child: Padding(
               padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: Icon(
-                Icons.filter,
-                color: mainColor,
+              child: SvgPicture.asset(
+                AssetPath.filterIconSvg,
+                semanticsLabel: 'Filter Icon',
               ),
             ),
           ),
@@ -67,9 +69,9 @@ class TMTLListScreen extends StatelessWidget {
             onTap: () {},
             child: Padding(
               padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: Icon(
-                Icons.search,
-                color: mainColor,
+              child: SvgPicture.asset(
+                AssetPath.searchIconSvg,
+                semanticsLabel: 'Search Icon',
               ),
             ),
           ),
@@ -104,7 +106,7 @@ class TMTLListScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: _buildTabBarView(),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -125,9 +127,9 @@ class TMTLListScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {},
-            child: Icon(
-              Icons.calendar_month_outlined,
-              color: mainColor,
+            child: SvgPicture.asset(
+              AssetPath.calendarIconSvg,
+              semanticsLabel: 'Calendar Icon',
             ),
           ),
         ],

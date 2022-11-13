@@ -20,6 +20,7 @@ Color kGreyTextColor = const Color(0xFFA5A5A5);
 Color kTabItemBgColor = const Color(0xFFFFF5DD);
 Color kTMTLInColor = const Color(0xFF549700);
 Color kTMTLOutColor = const Color(0xFFD64238);
+Color kDividerColor = const Color(0xFFE8ECF2);
 
 
 Color mainColor = const Color(0xFFC89C34);

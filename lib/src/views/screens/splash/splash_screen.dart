@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recall/routes/route.dart';
 import 'package:recall/src/services/local_storage.dart';
 import 'package:recall/src/utils/app_constants.dart';
+import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
@@ -29,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void pageNavigation() async {
-    if(LocalStorage.getData(key: LocalStorageKey.intro) == null) {
+    if (LocalStorage.getData(key: LocalStorageKey.intro) == null) {
       Get.offAllNamed(RouteGenerator.intro);
     } else {
       Get.offAllNamed(RouteGenerator.login);
@@ -72,30 +74,38 @@ class _SplashScreenState extends State<SplashScreen>
                 padding:
                     EdgeInsets.only(bottom: Dimensions.paddingSizeExtraLarge),
                 child: RichText(
-                  text: TextSpan(children: [
-                    TextSpan(
-                      text: 'Powered by ',
-                      style: GoogleFonts.roboto(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Powered by ',
+                        style: GoogleFonts.roboto(
                           textStyle: h3.copyWith(
-                              color: kGrey)),
-                    ),
-                    TextSpan(
-                      text: AppConstants.appName,
-                      style: GoogleFonts.roboto(
+                            color: kGrey,
+                          ),
+                        ),
+                      ),
+                      TextSpan(
+                        text: AppConstants.appName,
+                        style: GoogleFonts.roboto(
                           textStyle: h3.copyWith(
-                              color: kGrey, fontWeight: FontWeight.w500)),
-                    )
-                  ]),
+                            color: kGrey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )
+              ),
             ],
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.ac_unit,
-                size: animation.value * 100,
+              Image.asset(
+                AssetPath.logo,
+                height: animation.value * 150,
+                width:  animation.value * 150,
               ),
             ],
           ),

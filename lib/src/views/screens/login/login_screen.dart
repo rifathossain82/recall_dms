@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recall/routes/route.dart';
 import 'package:recall/src/controllers/login_controller.dart';
+import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
@@ -85,9 +87,8 @@ class LoginScreen extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: loginController.showPassword,
-            child: Icon(
-              Icons.visibility_sharp,
-              size: 20,
+            child: SvgPicture.asset(
+              AssetPath.visibilityOnIconSvg,
               color: loginController.passwordVisibility.value
                   ? kBlackLight
                   : kGreyDeep1,
@@ -96,9 +97,8 @@ class LoginScreen extends StatelessWidget {
           addHorizontalSpace(Dimensions.paddingSizeDefault),
           GestureDetector(
             onTap: loginController.hidePassword,
-            child: Icon(
-              Icons.visibility_off_outlined,
-              size: 20,
+            child: SvgPicture.asset(
+              AssetPath.visibilityOffIconSvg,
               color: loginController.passwordVisibility.value
                   ? kGreyDeep1
                   : kBlackLight,
