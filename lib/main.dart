@@ -6,6 +6,7 @@ import 'package:recall/routes/route.dart';
 import 'package:recall/src/utils/app_constants.dart';
 import 'package:recall/src/utils/app_theme.dart';
 import 'package:recall/src/utils/color.dart';
+import 'package:recall/src/views/base/k_scroll_behavior.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: KScrollBehavior(),
+          child: child!,
+        );
+      },
       debugShowCheckedModeBanner: false,
       title: AppConstants.appName,
       initialRoute: RouteGenerator.splash,

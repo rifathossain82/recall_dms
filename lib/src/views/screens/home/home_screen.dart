@@ -9,6 +9,7 @@ import 'package:recall/src/views/base/k_appbar.dart';
 import 'package:recall/src/views/screens/home/components/home_item_card.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/views/screens/tmtl/tmtl_list_screen.dart';
+import 'package:recall/src/views/screens/vehicle/vehicle_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -90,9 +91,7 @@ class HomeScreen extends StatelessWidget {
                 HomeItemCard(
                   assetImagePath: AssetPath.routeIcon,
                   title: 'Route Track',
-                  onTap: () {
-                    print('Route Track');
-                  },
+                  onTap: () => context.pushNewScreen(VehicleListScreen()),
                 ),
               ],
             ),

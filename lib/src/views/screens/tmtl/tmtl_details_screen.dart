@@ -67,35 +67,29 @@ class TMTLDetailsScreen extends StatelessWidget {
       );
 
   Widget _buildTMTLDetailsBody() {
-    return ScrollConfiguration(
-      behavior: KScrollBehavior(),
-      child: ListView(
-        children: [
-          _buildItemCard(),
-          addVerticalSpace(Dimensions.paddingSizeExtraLarge),
-          _buildLocationListTile(),
-          Divider(
-            color: mainColor,
-            height: 20,
-            thickness: 0.5,
-          ),
-          _buildBox(),
-          Divider(
-            color: kDividerColor,
-            height: 8,
-            thickness: 1.0,
-          ),
-          addVerticalSpace(Dimensions.paddingSizeExtraLarge),
-        ],
-      ),
+    return ListView(
+      children: [
+        _buildItemCard(),
+        addVerticalSpace(Dimensions.paddingSizeExtraLarge),
+        _buildLocationListTile(),
+        Divider(
+          color: mainColor,
+          height: 20,
+          thickness: 0.5,
+        ),
+        _buildBox(),
+        Divider(
+          color: kDividerColor,
+          height: 8,
+          thickness: 1.0,
+        ),
+        addVerticalSpace(Dimensions.paddingSizeExtraLarge),
+      ],
     );
   }
 
-  Widget _buildItemCard() => Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-        child: TMTLItemCard(tmtlData: tmtlDataList[0], isNavigation: false),
-      );
+  Widget _buildItemCard() =>
+      TMTLItemCard(tmtlData: tmtlDataList[0], isNavigation: false);
 
   Widget _buildLocationListTile() => Padding(
         padding:
@@ -155,8 +149,9 @@ class TMTLDetailsScreen extends StatelessWidget {
       );
 
   Widget _buildBoxListTile() => Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.paddingSizeDefault,
+        ),
         child: ListTile(
           contentPadding: EdgeInsets.zero,
           leading: Container(

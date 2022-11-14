@@ -28,41 +28,38 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(Dimensions.paddingSizeDefault),
-          child: ScrollConfiguration(
-            behavior: KScrollBehavior(),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  /// logo and loginWithPassword text
-                  addVerticalSpace(Get.height * 0.05),
-                  const KLogo(),
-                  Text(
-                    'Login with password',
-                    style: GoogleFonts.roboto(
-                      textStyle: h4.copyWith(
-                        fontWeight: FontWeight.w300,
-                        color: kBlackLight,
-                      ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                /// logo and loginWithPassword text
+                addVerticalSpace(Get.height * 0.05),
+                const KLogo(),
+                Text(
+                  'Login with password',
+                  style: GoogleFonts.roboto(
+                    textStyle: h4.copyWith(
+                      fontWeight: FontWeight.w300,
+                      color: kBlackLight,
                     ),
                   ),
+                ),
 
-                  /// email/phone textField
-                  addVerticalSpace(Get.height * 0.05),
-                  _buildEmailOrPhoneTextFiled(),
+                /// email/phone textField
+                addVerticalSpace(Get.height * 0.05),
+                _buildEmailOrPhoneTextFiled(),
 
-                  /// password textField
-                  addVerticalSpace(Get.height * 0.03),
-                  _buildPasswordTextFiled(),
+                /// password textField
+                addVerticalSpace(Get.height * 0.03),
+                _buildPasswordTextFiled(),
 
-                  /// login button
-                  addVerticalSpace(Get.height * 0.05),
-                  _buildLoginButton(),
+                /// login button
+                addVerticalSpace(Get.height * 0.05),
+                _buildLoginButton(),
 
-                  /// forgot password button
-                  addVerticalSpace(Get.height * 0.025),
-                  const ForgotPasswordButton(),
-                ],
-              ),
+                /// forgot password button
+                addVerticalSpace(Get.height * 0.025),
+                const ForgotPasswordButton(),
+              ],
             ),
           ),
         ),

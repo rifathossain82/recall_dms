@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 Color kWhite = Colors.white;
 Color kRed = Colors.red;
 Color kBlack = Colors.black;
+Color kBlue= const Color(0xFF3879E9);
 Color kBlackLight = const Color(0xFF303030);
 Color kBlackMedium = const Color(0xFF404040);
 Color kGrey = const Color(0xFF9EA1B6);
@@ -21,6 +22,9 @@ Color kTabItemBgColor = const Color(0xFFFFF5DD);
 Color kTMTLInColor = const Color(0xFF549700);
 Color kTMTLOutColor = const Color(0xFFD64238);
 Color kDividerColor = const Color(0xFFE8ECF2);
+Color kActiveColor = const Color(0xFF1CAF5E);
+Color kInActiveColor = const Color(0xFFAAAAAA);
+Color kBlueGrey = const Color(0xFF7D8FAB);
 
 
 Color mainColor = const Color(0xFFC89C34);
