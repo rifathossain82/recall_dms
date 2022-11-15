@@ -18,7 +18,7 @@ class KButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius ?? 5),
       ),
       color: mainColor,
-      height: Get.height * 0.058,
+      height: 42,
       minWidth: Get.width,
       padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
       elevation: 0,

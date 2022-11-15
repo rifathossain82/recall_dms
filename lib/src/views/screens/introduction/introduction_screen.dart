@@ -20,8 +20,10 @@ class IntroductionScreen extends StatefulWidget {
 class _IntroductionScreenState extends State<IntroductionScreen> {
   int currentPage = 0;
   List<IntroductionScreenModel> introDataList = AppConstants.introData;
-  PageController controller =
-      PageController(viewportFraction: 1, keepPage: true);
+  PageController controller = PageController(
+    viewportFraction: 1,
+    keepPage: true,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,6 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-
           /// back button
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -81,8 +82,9 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 onTap: () async {
                   if (currentPage != 0) {
                     controller.previousPage(
-                        duration: const Duration(microseconds: 300),
-                        curve: Curves.decelerate);
+                      duration: const Duration(microseconds: 300),
+                      curve: Curves.decelerate,
+                    );
                   }
                 },
                 child: currentPage == 0
@@ -124,10 +126,15 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 onTap: () async {
                   if (currentPage != introDataList.length - 1) {
                     controller.nextPage(
-                        duration: const Duration(microseconds: 300),
-                        curve: Curves.decelerate);
-                  } else {
-                    LocalStorage.saveData(key: LocalStorageKey.intro, data: true);
+                      duration: const Duration(microseconds: 300),
+                      curve: Curves.decelerate,
+                    );
+                  }
+                  else {
+                    LocalStorage.saveData(
+                      key: LocalStorageKey.intro,
+                      data: true,
+                    );
                     Get.offAllNamed(RouteGenerator.login);
                   }
                 },
@@ -148,13 +155,15 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                             Icon(
                               Icons.keyboard_arrow_right,
                               color: mainColor,
-                            )
+                            ),
                           ],
                         )
                       : Text(
                           'Next',
                           style: h3.copyWith(
-                              color: mainColor, fontWeight: FontWeight.w500),
+                            color: mainColor,
+                            fontWeight: FontWeight.w500,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                 ),

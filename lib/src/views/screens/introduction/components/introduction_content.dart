@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recall/src/models/introduction_screen_model.dart';
 import 'package:recall/src/utils/color.dart';
+import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 
@@ -16,15 +17,21 @@ class IntroductionContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildImage(),
-        addVerticalSpace(5),
-        _buildTitle(),
-        addVerticalSpace(10),
-        _buildDescription(context)],
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildImage(),
+            addVerticalSpace(Dimensions.paddingSizeSmall),
+            _buildTitle(),
+            addVerticalSpace(Dimensions.paddingSizeSmall),
+            _buildDescription(context),
+          ],
+        ),
+      ),
     );
   }
 
@@ -63,8 +70,8 @@ class IntroductionContent extends StatelessWidget {
         introData.description,
         textAlign: TextAlign.center,
         style: GoogleFonts.overpass(
-          textStyle: h3.copyWith(fontWeight: FontWeight.w300, color: kGreyLight)
-        ),
+            textStyle:
+                h3.copyWith(fontWeight: FontWeight.w300, color: kGreyLight)),
       ),
     );
   }

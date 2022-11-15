@@ -8,7 +8,6 @@ import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
-import 'package:recall/src/views/base/k_scroll_behavior.dart';
 import 'package:recall/src/views/screens/tmtl/components/tmtl_item_card.dart';
 
 class TMTLDetailsScreen extends StatelessWidget {
@@ -88,12 +87,15 @@ class TMTLDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildItemCard() =>
-      TMTLItemCard(tmtlData: tmtlDataList[0], isNavigation: false);
+  Widget _buildItemCard() => TMTLItemCard(
+        tmtlData: tmtlDataList[0],
+        isNavigation: false,
+      );
 
   Widget _buildLocationListTile() => Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.paddingSizeDefault,
+        ),
         child: ListTile(
           contentPadding: EdgeInsets.zero,
           leading: Container(

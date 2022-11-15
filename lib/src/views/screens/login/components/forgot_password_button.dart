@@ -11,7 +11,9 @@ class ForgotPasswordButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed(RouteGenerator.forgotPassword,),
+      onTap: () => Get.toNamed(
+        RouteGenerator.forgotPassword,
+      ),
       child: Text(
         'Forgot your Password?',
         style: GoogleFonts.roboto(

@@ -8,21 +8,21 @@ import 'package:recall/src/utils/app_theme.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/views/base/k_scroll_behavior.dart';
 
-void main()async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   runApp(const MyApp());
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: kWhite,
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: kWhite,
 
-    /// Status bar brightness (optional)
-    statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-    statusBarBrightness: Brightness.light, // For iOS (dark icons)
-  ));
-
+      /// Status bar brightness (optional)
+      statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+      statusBarBrightness: Brightness.light, // For iOS (dark icons)
+    ),
+  );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

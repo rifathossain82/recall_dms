@@ -4,17 +4,18 @@ import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/styles.dart';
 
 class KTextFiled extends StatelessWidget {
-  const KTextFiled(
-      {Key? key,
-      required this.controller,
-      this.hintText,
-      this.labelText,
-      this.onChanged,
-      this.inputType,
-      this.inputAction,
-      this.suffix,
-      this.obscureValue})
-      : super(key: key);
+  const KTextFiled({
+    Key? key,
+    required this.controller,
+    this.hintText,
+    this.labelText,
+    this.onChanged,
+    this.inputType,
+    this.inputAction,
+    this.suffix,
+    this.obscureValue,
+    this.isBorder = true,
+  }) : super(key: key);
 
   final TextEditingController controller;
   final String? hintText;
@@ -24,6 +25,7 @@ class KTextFiled extends StatelessWidget {
   final TextInputAction? inputAction;
   final Widget? suffix;
   final bool? obscureValue;
+  final bool isBorder;
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +44,13 @@ class KTextFiled extends StatelessWidget {
             color: kGreyDeep1,
           ),
         ),
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: kGreyDeep1,
-          ),
-        ),
+        border: isBorder
+            ? UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: kGreyDeep1,
+                ),
+              )
+            : InputBorder.none,
         suffixIcon: suffix,
       ),
     );

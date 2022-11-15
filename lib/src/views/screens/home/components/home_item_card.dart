@@ -7,9 +7,12 @@ import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 
 class HomeItemCard extends StatelessWidget {
-  const HomeItemCard(
-      {Key? key, required this.assetImagePath, required this.title, this.onTap})
-      : super(key: key);
+  const HomeItemCard({
+    Key? key,
+    required this.assetImagePath,
+    required this.title,
+    this.onTap,
+  }) : super(key: key);
 
   final String assetImagePath;
   final String title;
@@ -25,20 +28,21 @@ class HomeItemCard extends StatelessWidget {
         height: size * 0.43,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-            color: kWhite,
-            border: Border.all(
-              color: mainColor,
-              width: 1,
+          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+          color: kWhite,
+          border: Border.all(
+            color: mainColor,
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: kItemShadowColor,
+              spreadRadius: 0,
+              blurRadius: 2,
+              offset: const Offset(0, 1),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: kItemShadowColor,
-                spreadRadius: 0,
-                blurRadius: 2,
-                offset: const Offset(0, 1),
-              )
-            ]),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,

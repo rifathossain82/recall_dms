@@ -10,6 +10,7 @@ import 'package:recall/src/views/screens/home/components/home_item_card.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/views/screens/tmtl/tmtl_list_screen.dart';
 import 'package:recall/src/views/screens/vehicle/vehicle_list_screen.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             _buildHomeAppBar(),
-            _buildHomeBody(context),
+            Expanded(child: _buildHomeBody(context)),
           ],
         ),
       ),
@@ -59,43 +60,47 @@ class HomeScreen extends StatelessWidget {
       );
 
   Widget _buildHomeBody(BuildContext context) => Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Welcome Masud Rana',
-              textAlign: TextAlign.start,
-              style: h2.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            addVerticalSpace(Dimensions.paddingSizeExtraSmall),
-            Text(
-              'Date: 1 Oct 2022',
-              textAlign: TextAlign.start,
-              style: h4.copyWith(
-                color: kGreyTextColor,
-              ),
-            ),
-            addVerticalSpace(Dimensions.paddingSizeDefault),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                HomeItemCard(
-                  assetImagePath: AssetPath.folderIcon,
-                  title: 'TMTL List',
-                  onTap: () => context.pushNewScreen(TMTLListScreen()),
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.paddingSizeDefault,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome Masud Rana',
+                textAlign: TextAlign.start,
+                style: h2.copyWith(
+                  fontWeight: FontWeight.w500,
                 ),
-                HomeItemCard(
-                  assetImagePath: AssetPath.routeIcon,
-                  title: 'Route Track',
-                  onTap: () => context.pushNewScreen(VehicleListScreen()),
+              ),
+              addVerticalSpace(Dimensions.paddingSizeExtraSmall),
+              Text(
+                'Date: ${DateFormat('d MMM yyyy').format(DateTime.now())}',
+                textAlign: TextAlign.start,
+                style: h4.copyWith(
+                  color: kGreyTextColor,
                 ),
-              ],
-            ),
-          ],
+              ),
+              addVerticalSpace(Dimensions.paddingSizeDefault),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  HomeItemCard(
+                    assetImagePath: AssetPath.folderIcon,
+                    title: 'TMTL List',
+                    onTap: () => context.pushNewScreen(TMTLListScreen()),
+                  ),
+                  HomeItemCard(
+                    assetImagePath: AssetPath.routeIcon,
+                    title: 'Route Track',
+                    onTap: () => context.pushNewScreen(const VehicleListScreen()),
+                  ),
+                ],
+              ),
+              addVerticalSpace(Dimensions.paddingSizeLarge),
+            ],
+          ),
         ),
       );
 }

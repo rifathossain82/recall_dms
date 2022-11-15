@@ -8,16 +8,12 @@ import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
+import 'package:recall/src/views/base/k_date.dart';
 import 'package:recall/src/views/screens/vehicle/components/custom_stepper.dart';
 
-class VehicleDetailsScreen extends StatefulWidget {
-  VehicleDetailsScreen({Key? key}) : super(key: key);
+class VehicleDetailsScreen extends StatelessWidget {
+  const VehicleDetailsScreen({Key? key}) : super(key: key);
 
-  @override
-  State<VehicleDetailsScreen> createState() => _VehicleDetailsScreenState();
-}
-
-class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,10 +68,12 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// date and calender widget
-          _buildDate(),
-
-          /// give space
-          addVerticalSpace(Dimensions.paddingSizeDefault),
+          KDate(
+            onPressed: () {
+              print('Please create method.');
+            },
+            dateTime: DateTime.now(),
+          ),
 
           /// stepper
           Expanded(
@@ -85,29 +83,6 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
           /// give space at the bottom
           addVerticalSpace(Dimensions.paddingSizeExtraLarge),
         ],
-      );
-
-  Widget _buildDate() => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: Dimensions.paddingSizeDefault,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Today, 02 Octber 2022',
-              textAlign: TextAlign.start,
-              style: h4,
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AssetPath.calendarIconSvg,
-                semanticsLabel: 'Calendar Icon',
-              ),
-            ),
-          ],
-        ),
       );
 
   Widget _buildStepper() {
@@ -181,23 +156,12 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '10:00 am',
-                  style: h4.copyWith(
-                    color: isComplete ? mainColor : kInActiveColor,
-                  ),
-                ),
-                addHorizontalSpace(Dimensions.paddingSizeLarge),
-                Text(
-                  '02 October 2022',
-                  style: h4.copyWith(
-                    color: isComplete ? mainColor : kInActiveColor,
-                  ),
-                ),
-              ],
+            Text(
+              '10:00 am   02 October 2022',
+              maxLines: 1,
+              style: h4.copyWith(
+                color: isComplete ? mainColor : kInActiveColor,
+              ),
             ),
             Text(
               isComplete ? 'Delivery Complete' : 'Delivery Pending',
@@ -210,20 +174,26 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
         ),
       );
 
-  Widget _buildBox(bool isComplete) => SizedBox(
-        height: 2 * 85,
-        child: ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: 2,
-          itemBuilder: (context, index) => _buildBoxListTile(isComplete),
-          separatorBuilder: (context, index) => Divider(
-            color: kDividerColor,
-            height: 8,
-            thickness: 1.0,
+  Widget _buildBox(bool isComplete) {
+    return Column(
+      children: [
+        ...List.generate(
+          2,
+          (index) => Column(
+            children: [
+              _buildBoxListTile(isComplete),
+              Divider(
+                color: kDividerColor,
+                height: 8,
+                thickness: 1.0,
+              ),
+            ],
           ),
         ),
-      );
+        addVerticalSpace(40),
+      ],
+    );
+  }
 
   Widget _buildBoxListTile(bool isComplete) => ListTile(
         contentPadding: EdgeInsets.zero,
@@ -246,7 +216,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
           'TMTL -001',
           style: h3.copyWith(
             fontWeight: FontWeight.w500,
-            color: isComplete? null : kInActiveColor,
+            color: isComplete ? null : kInActiveColor,
           ),
         ),
         subtitle: Row(
@@ -267,7 +237,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
               width: 5,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isComplete? mainColor : kInActiveColor,
+                color: isComplete ? mainColor : kInActiveColor,
               ),
             ),
             addHorizontalSpace(Dimensions.paddingSizeSmall),
@@ -275,15 +245,15 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
               '(CBL)',
               style: h4.copyWith(
                 fontWeight: FontWeight.w500,
-                color: isComplete? kBlueGrey : kInActiveColor,
+                color: isComplete ? kBlueGrey : kInActiveColor,
               ),
-            )
+            ),
           ],
         ),
         trailing: SvgPicture.asset(
           AssetPath.arrowRightIconSvg,
           semanticsLabel: 'Arrow Right',
-          color: isComplete? null : kInActiveColor,
+          color: isComplete ? null : kInActiveColor,
         ),
       );
 }

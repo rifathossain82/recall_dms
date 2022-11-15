@@ -27,7 +27,7 @@ class DashboardScreen extends StatelessWidget {
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
         title: "Home",
-        textStyle:  GoogleFonts.quicksand(
+        textStyle: GoogleFonts.quicksand(
           textStyle: h5.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -43,7 +43,7 @@ class DashboardScreen extends StatelessWidget {
           child: Icon(Icons.notifications),
         ),
         title: "Notification",
-        textStyle:  GoogleFonts.quicksand(
+        textStyle: GoogleFonts.quicksand(
           textStyle: h5.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -54,7 +54,7 @@ class DashboardScreen extends StatelessWidget {
       PersistentBottomNavBarItem(
         icon: Icon(Icons.account_box),
         title: "Profile",
-        textStyle:  GoogleFonts.quicksand(
+        textStyle: GoogleFonts.quicksand(
           textStyle: h5.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -106,5 +106,4 @@ class DashboardScreen extends StatelessWidget {
       navBarStyle: NavBarStyle.style6,
     );
   }
-
 }

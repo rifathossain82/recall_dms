@@ -5,10 +5,7 @@ import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/views/base/helper.dart';
 
 class CustomStepper extends StatelessWidget {
-  const CustomStepper({
-    Key? key,
-    required this.stepperData,
-  }) : super(key: key);
+  const CustomStepper({Key? key, required this.stepperData}) : super(key: key);
 
   final StepperData stepperData;
 

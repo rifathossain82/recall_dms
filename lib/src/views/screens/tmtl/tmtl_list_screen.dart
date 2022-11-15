@@ -9,7 +9,8 @@ import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
-import 'package:recall/src/views/base/k_scroll_behavior.dart';
+import 'package:recall/src/views/base/k_date.dart';
+import 'package:recall/src/views/base/k_text_field.dart';
 import 'package:recall/src/views/screens/tmtl/components/tabBar_item.dart';
 import 'package:recall/src/views/screens/tmtl/components/tmtl_item_card.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
@@ -18,20 +19,25 @@ class TMTLListScreen extends StatelessWidget {
   TMTLListScreen({Key? key}) : super(key: key);
 
   final TMTLController tmtlController = Get.put(TMTLController());
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            /// appBar content
-            _buildTMTLAppBar(context),
+        child: Obx(() {
+          return Column(
+            children: [
+              /// appBar content
+              _buildTMTLAppBar(context),
 
-            /// body content
-            Expanded(child: _buildTMTLBody()),
-          ],
-        ),
+              /// body content
+              Expanded(
+                child: _buildTMTLBody(context),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
@@ -47,13 +53,23 @@ class TMTLListScreen extends StatelessWidget {
             ),
           ),
         ),
-        title: Text(
-          'TMTL List',
-          style: h2.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        title: tmtlController.isClickSearch.value
+            ? KTextFiled(
+                controller: searchController,
+                hintText: 'Search here',
+                isBorder: false,
+                onChanged: (value) {
+                  print(value);
+                },
+              )
+            : Text(
+                'TMTL List',
+                style: h2.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
         actions: [
+          /// filter icon
           GestureDetector(
             onTap: () {},
             child: Padding(
@@ -64,80 +80,83 @@ class TMTLListScreen extends StatelessWidget {
               ),
             ),
           ),
+
+          /// horizontal space
           addHorizontalSpace(2),
+
+          /// search and close icon
           GestureDetector(
-            onTap: () {},
+            onTap: tmtlController.changeSearchStatus,
             child: Padding(
               padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: SvgPicture.asset(
-                AssetPath.searchIconSvg,
-                semanticsLabel: 'Search Icon',
-              ),
+              child: tmtlController.isClickSearch.value
+                  ? Icon(
+                      Icons.clear,
+                      size: 20,
+                      color: mainColor,
+                    )
+                  : SvgPicture.asset(
+                      AssetPath.searchIconSvg,
+                      semanticsLabel: 'Search Icon',
+                    ),
             ),
           ),
         ],
       );
 
-  Widget _buildTMTLBody() {
-    return Obx(
-      () => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// date and calender widget
-          _buildDate(),
+  Widget _buildTMTLBody(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// date and calender widget
+        KDate(
+          onPressed: () => _selectDate(context),
+          dateTime: tmtlController.selectedDate.value,
+        ),
 
-          /// give space
-          addVerticalSpace(Dimensions.paddingSizeDefault),
-
-          /// tabBar widgets
-          Expanded(
-            child: DefaultTabController(
-              length: 3,
-              initialIndex: 0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    constraints: const BoxConstraints.expand(height: 50),
-                    child: _buildTabBar(),
-                  ),
-                  addVerticalSpace(Dimensions.paddingSizeSmall),
-                  Expanded(
-                    child: _buildTabBarView(),
-                  ),
-                ],
-              ),
+        /// tabBar widgets
+        Expanded(
+          child: DefaultTabController(
+            length: 3,
+            initialIndex: 0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  constraints: const BoxConstraints.expand(height: 50),
+                  child: _buildTabBar(),
+                ),
+                addVerticalSpace(Dimensions.paddingSizeSmall),
+                Expanded(
+                  child: _buildTabBarView(),
+                ),
+                addVerticalSpace(Dimensions.paddingSizeLarge),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildDate() => Padding(
-    padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault,),
-    child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Today, 02 Octber 2022',
-              textAlign: TextAlign.start,
-              style: h4,
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AssetPath.calendarIconSvg,
-                semanticsLabel: 'Calendar Icon',
-              ),
-            ),
-          ],
-        ),
-  );
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: tmtlController.selectedDate.value,
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != tmtlController.selectedDate.value) {
+      tmtlController.changeDateTime(picked);
+      print(picked);
+    }
+  }
 
   Widget _buildTabBar() => Padding(
-    padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault,),
-    child: TabBar(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.paddingSizeDefault,
+        ),
+        child: TabBar(
           onTap: tmtlController.changeIndex,
           indicatorColor: Colors.transparent,
           overlayColor: MaterialStateProperty.all(Colors.transparent),
@@ -166,7 +185,7 @@ class TMTLListScreen extends StatelessWidget {
             ),
           ],
         ),
-  );
+      );
 
   Widget _buildTabBarView() => TabBarView(
         children: [
@@ -177,33 +196,36 @@ class TMTLListScreen extends StatelessWidget {
       );
 
   Widget _buildAllTMTLList() => ListView.separated(
-    itemCount: tmtlDataList.length,
-    itemBuilder: (context, index){
-      return TMTLItemCard(tmtlData: tmtlDataList[index]);
-    },
-    separatorBuilder: (context, index) =>
-        addVerticalSpace(Dimensions.paddingSizeSmall),
-  );
+        itemCount: tmtlDataList.length,
+        itemBuilder: (context, index) {
+          return TMTLItemCard(tmtlData: tmtlDataList[index]);
+        },
+        separatorBuilder: (context, index) => addVerticalSpace(
+          Dimensions.paddingSizeSmall,
+        ),
+      );
 
   Widget _buildInTMTLList() => ListView.separated(
-    itemCount: tmtlDataList.length,
-    itemBuilder: (context, index){
-      return tmtlDataList[index].status == TMTLStatus.In
-          ? TMTLItemCard(tmtlData: tmtlDataList[index])
-          : Container();
-    },
-    separatorBuilder: (context, index) =>
-        addVerticalSpace(Dimensions.paddingSizeSmall),
-  );
+        itemCount: tmtlDataList.length,
+        itemBuilder: (context, index) {
+          return tmtlDataList[index].status == TMTLStatus.In
+              ? TMTLItemCard(tmtlData: tmtlDataList[index])
+              : Container();
+        },
+        separatorBuilder: (context, index) => addVerticalSpace(
+          Dimensions.paddingSizeSmall,
+        ),
+      );
 
   Widget _buildOutTMTLList() => ListView.separated(
-    itemCount: tmtlDataList.length,
-    itemBuilder: (context, index){
-      return tmtlDataList[index].status == TMTLStatus.Out
-          ? TMTLItemCard(tmtlData: tmtlDataList[index])
-          : Container();
-    },
-    separatorBuilder: (context, index) =>
-        addVerticalSpace(Dimensions.paddingSizeSmall),
-  );
+        itemCount: tmtlDataList.length,
+        itemBuilder: (context, index) {
+          return tmtlDataList[index].status == TMTLStatus.Out
+              ? TMTLItemCard(tmtlData: tmtlDataList[index])
+              : Container();
+        },
+        separatorBuilder: (context, index) => addVerticalSpace(
+          Dimensions.paddingSizeSmall,
+        ),
+      );
 }

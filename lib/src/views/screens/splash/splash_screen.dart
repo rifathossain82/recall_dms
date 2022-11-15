@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recall/routes/route.dart';
@@ -42,11 +41,15 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     setSplashDuration();
 
-    animationController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
 
-    animation =
-        CurvedAnimation(parent: animationController, curve: Curves.easeOut);
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeOut,
+    );
 
     animation.addListener(() => setState(() {}));
     animationController.forward();
@@ -71,8 +74,9 @@ class _SplashScreenState extends State<SplashScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding:
-                    EdgeInsets.only(bottom: Dimensions.paddingSizeExtraLarge),
+                padding: EdgeInsets.only(
+                  bottom: Dimensions.paddingSizeExtraLarge,
+                ),
                 child: RichText(
                   text: TextSpan(
                     children: [
@@ -105,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen>
               Image.asset(
                 AssetPath.logo,
                 height: animation.value * 150,
-                width:  animation.value * 150,
+                width: animation.value * 150,
               ),
             ],
           ),

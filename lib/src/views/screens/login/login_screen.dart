@@ -11,7 +11,6 @@ import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_button.dart';
 import 'package:recall/src/views/base/k_logo.dart';
-import 'package:recall/src/views/base/k_scroll_behavior.dart';
 import 'package:recall/src/views/base/k_text_field.dart';
 import 'package:recall/src/views/screens/login/components/forgot_password_button.dart';
 
@@ -67,58 +66,59 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmailOrPhoneTextFiled()=> KTextFiled(
-    controller: emailOrPhoneController,
-    labelText: 'Email / Phone No',
-    inputAction: TextInputAction.next,
-  );
+  Widget _buildEmailOrPhoneTextFiled() => KTextFiled(
+        controller: emailOrPhoneController,
+        labelText: 'Email / Phone No',
+        inputAction: TextInputAction.next,
+      );
 
-  Widget _buildPasswordTextFiled(){
-    return Obx(() => KTextFiled(
-      controller: passwordController,
-      labelText: 'Password',
-      inputAction: TextInputAction.done,
-      obscureValue: loginController.passwordVisibility.value,
-      suffix: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GestureDetector(
-            onTap: loginController.showPassword,
-            child: SvgPicture.asset(
-              AssetPath.visibilityOnIconSvg,
-              color: loginController.passwordVisibility.value
-                  ? kBlackLight
-                  : kGreyDeep1,
+  Widget _buildPasswordTextFiled() {
+    return Obx(
+      () => KTextFiled(
+        controller: passwordController,
+        labelText: 'Password',
+        inputAction: TextInputAction.done,
+        obscureValue: loginController.passwordVisibility.value,
+        suffix: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            GestureDetector(
+              onTap: loginController.showPassword,
+              child: SvgPicture.asset(
+                AssetPath.visibilityOnIconSvg,
+                color: loginController.passwordVisibility.value
+                    ? kBlackLight
+                    : kGreyDeep1,
+              ),
             ),
-          ),
-          addHorizontalSpace(Dimensions.paddingSizeDefault),
-          GestureDetector(
-            onTap: loginController.hidePassword,
-            child: SvgPicture.asset(
-              AssetPath.visibilityOffIconSvg,
-              color: loginController.passwordVisibility.value
-                  ? kGreyDeep1
-                  : kBlackLight,
+            addHorizontalSpace(Dimensions.paddingSizeDefault),
+            GestureDetector(
+              onTap: loginController.hidePassword,
+              child: SvgPicture.asset(
+                AssetPath.visibilityOffIconSvg,
+                color: loginController.passwordVisibility.value
+                    ? kGreyDeep1
+                    : kBlackLight,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   Widget _buildLoginButton() => KButton(
-      onPressed: _loginMethod,
-      child: Text(
-        'Login',
-        style: GoogleFonts.roboto(
+        onPressed: _loginMethod,
+        child: Text(
+          'Login',
+          style: GoogleFonts.roboto(
             textStyle: h3.copyWith(
               color: kWhite,
               fontWeight: FontWeight.w500,
-            )),
-      ));
+            ),
+          ),
+        ),
+      );
 
-  void _loginMethod()=> Get.offAllNamed(RouteGenerator.dashboard);
-
+  void _loginMethod() => Get.offAllNamed(RouteGenerator.dashboard);
 }
-
-

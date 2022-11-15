@@ -7,6 +7,7 @@ import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
+import 'package:recall/src/views/base/k_date.dart';
 import 'package:recall/src/views/screens/vehicle/components/vehicle_item_card.dart';
 
 class VehicleListScreen extends StatelessWidget {
@@ -66,10 +67,12 @@ class VehicleListScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// date and calender widget
-          _buildDate(),
-
-          /// give space
-          addVerticalSpace(Dimensions.paddingSizeDefault),
+          KDate(
+            onPressed: () {
+              print('Please create method.');
+            },
+            dateTime: DateTime.now(),
+          ),
 
           /// vehicle list
           Expanded(
@@ -88,25 +91,4 @@ class VehicleListScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildDate() => Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Today, 02 Octber 2022',
-              textAlign: TextAlign.start,
-              style: h4,
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AssetPath.calendarIconSvg,
-                semanticsLabel: 'Calendar Icon',
-              ),
-            ),
-          ],
-        ),
-      );
 }

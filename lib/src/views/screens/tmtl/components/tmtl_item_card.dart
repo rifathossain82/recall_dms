@@ -12,9 +12,11 @@ import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/screens/tmtl/tmtl_details_screen.dart';
 
 class TMTLItemCard extends StatelessWidget {
-  const TMTLItemCard(
-      {Key? key, required this.tmtlData, this.isNavigation = true})
-      : super(key: key);
+  const TMTLItemCard({
+    Key? key,
+    required this.tmtlData,
+    this.isNavigation = true,
+  }) : super(key: key);
 
   final TMTLModel tmtlData;
   final bool isNavigation;
@@ -22,7 +24,9 @@ class TMTLItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault,),
+      padding: EdgeInsets.symmetric(
+        horizontal: Dimensions.paddingSizeDefault,
+      ),
       child: GestureDetector(
         onTap: () => isNavigation
             ? context.pushNewScreen(TMTLDetailsScreen(id: tmtlData.id))
@@ -38,8 +42,9 @@ class TMTLItemCard extends StatelessWidget {
             color: kWhite,
             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
             border: Border.all(
-              color:
-                  tmtlData.status == TMTLStatus.In ? kTMTLInColor : kTMTLOutColor,
+              color: tmtlData.status == TMTLStatus.In
+                  ? kTMTLInColor
+                  : kTMTLOutColor,
             ),
             boxShadow: [
               BoxShadow(
@@ -47,8 +52,8 @@ class TMTLItemCard extends StatelessWidget {
                 blurRadius: 4,
                 spreadRadius: 0,
                 color: kItemShadowColor,
-              )
-            ]
+              ),
+            ],
           ),
           child: IntrinsicHeight(
             child: Row(
@@ -90,7 +95,7 @@ class TMTLItemCard extends StatelessWidget {
                       ),
                       addVerticalSpace(6),
                       Text(
-                        isNavigation?tmtlData.time : tmtlData.quantity,
+                        isNavigation ? tmtlData.time : tmtlData.quantity,
                         style: GoogleFonts.roboto(
                           textStyle: h5.copyWith(
                             color: kGreyLightProMax,
