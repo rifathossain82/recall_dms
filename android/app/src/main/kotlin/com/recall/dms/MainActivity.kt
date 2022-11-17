@@ -1,4 +1,4 @@
-package com.example.recall
+package com.recall.dms
 
 import io.flutter.embedding.android.FlutterActivity
 

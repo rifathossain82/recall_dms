@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recall/src/models/vehicle_data.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
@@ -11,7 +12,8 @@ import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/screens/vehicle/vehicle_details_screen.dart';
 
 class VehicleItemCard extends StatelessWidget {
-  const VehicleItemCard({Key? key}) : super(key: key);
+  final VehicleData vehicle;
+  const VehicleItemCard({Key? key, required this.vehicle}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,19 +70,19 @@ class VehicleItemCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Vehicle ID #001",
+                          "Vehicle ID #${vehicle.id}",
                           style: h3.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         addVerticalSpace(2),
                         Text(
-                          '10:00am - 02:00pm',
+                          '${vehicle.startTime} - ${vehicle.endTime}',
                           style: h5,
                         ),
                         addVerticalSpace(2),
                         Text(
-                          'Uttara - Banani - Mirpur - Basabo.',
+                          vehicle.locationName!.map((e) => e.toString()).join(' - '),
                           style: GoogleFonts.roboto(
                             textStyle: h4,
                           ),

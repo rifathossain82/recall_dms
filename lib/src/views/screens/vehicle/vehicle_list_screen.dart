@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:recall/src/controllers/vehicle_controller.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
@@ -11,30 +13,37 @@ import 'package:recall/src/views/base/k_date.dart';
 import 'package:recall/src/views/screens/vehicle/components/vehicle_item_card.dart';
 
 class VehicleListScreen extends StatelessWidget {
-  const VehicleListScreen({Key? key}) : super(key: key);
+  VehicleListScreen({Key? key}) : super(key: key);
+
+  final vehicleController = Get.put(VehicleController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            /// appBar content
-            _buildVehicleListAppBar(context),
+        child: Obx(() {
+          return Column(
+            children: [
+              /// appBar content
+              _buildVehicleListAppBar(context),
 
-            /// body content
-            Expanded(
-              child: _buildVehicleListBody(),
-            ),
-          ],
-        ),
+              /// body content
+              Expanded(
+                child: _buildVehicleListBody(context),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
 
   Widget _buildVehicleListAppBar(BuildContext context) => KAppBar(
         leading: GestureDetector(
-          onTap: () => context.popScreen(),
+          onTap: () {
+            Get.delete<VehicleController>();
+            context.popScreen();
+          },
           child: Padding(
             padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
             child: Icon(
@@ -63,27 +72,33 @@ class VehicleListScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildVehicleListBody() => Column(
+  Widget _buildVehicleListBody(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// date and calender widget
           KDate(
-            onPressed: () {
-              print('Please create method.');
-            },
-            dateTime: DateTime.now(),
+            onPressed: () => _selectDate(context),
+            dateTime: vehicleController.vehicleListScreenDate.value,
           ),
 
           /// vehicle list
           Expanded(
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: 20,
-              itemBuilder: (context, index) => VehicleItemCard(),
-              separatorBuilder: (context, index) => addVerticalSpace(
-                Dimensions.paddingSizeSmall,
-              ),
-            ),
+            child: vehicleController.isLoading.value
+                ? const Center(child: CircularProgressIndicator())
+                : vehicleController.vehicleList.isEmpty
+                    ? const Center(child: Text('No Data Found'))
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: vehicleController.vehicleList.length,
+                        itemBuilder: (context, index) {
+                          return VehicleItemCard(
+                            vehicle: vehicleController.vehicleList[index],
+                          );
+                        },
+                        separatorBuilder: (context, index) => addVerticalSpace(
+                          Dimensions.paddingSizeSmall,
+                        ),
+                      ),
           ),
 
           /// give space at the bottom
@@ -91,4 +106,19 @@ class VehicleListScreen extends StatelessWidget {
         ],
       );
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: vehicleController.vehicleListScreenDate.value,
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null &&
+        picked != vehicleController.vehicleListScreenDate.value) {
+      vehicleController.changeVehicleListScreenDateTime(picked);
+      vehicleController.getVehicleList(
+          date: '${picked.month}/${picked.day}/${picked.year}');
+      kPrint('${picked.month}/${picked.day}/${picked.year}');
+    }
+  }
 }

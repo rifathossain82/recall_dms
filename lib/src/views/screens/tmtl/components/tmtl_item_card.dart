@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
-import 'package:recall/src/services/fack_data.dart';
+import 'package:recall/src/services/fake_data.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';

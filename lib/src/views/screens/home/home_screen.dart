@@ -94,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                   HomeItemCard(
                     assetImagePath: AssetPath.routeIcon,
                     title: 'Route Track',
-                    onTap: () => context.pushNewScreen(const VehicleListScreen()),
+                    onTap: () => context.pushNewScreen(VehicleListScreen()),
                   ),
                 ],
               ),

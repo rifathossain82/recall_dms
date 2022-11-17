@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:recall/src/controllers/tmtl_controller.dart';
-import 'package:recall/src/services/fack_data.dart';
+import 'package:recall/src/services/fake_data.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
@@ -20,6 +20,7 @@ class TMTLListScreen extends StatelessWidget {
 
   final TMTLController tmtlController = Get.put(TMTLController());
   TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -42,67 +43,77 @@ class TMTLListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTMTLAppBar(BuildContext context) => KAppBar(
-        leading: GestureDetector(
-          onTap: () => context.popScreen(),
+  Widget _buildTMTLAppBar(BuildContext context) {
+    if(tmtlController.isClickSearch.value){
+      searchFocusNode.requestFocus();
+    }
+    return KAppBar(
+      leading: GestureDetector(
+        onTap: () {
+          Get.delete<TMTLController>();
+          searchController.clear();
+          context.popScreen();
+        },
+        child: Padding(
+          padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+          child: Icon(
+            Icons.arrow_back,
+            color: kBlackLight,
+          ),
+        ),
+      ),
+      title: tmtlController.isClickSearch.value
+          ? KTextFiled(
+        controller: searchController,
+        focusNode: searchFocusNode,
+        hintText: 'Search here',
+        isBorder: false,
+        onChanged: (value) {
+          print(value);
+        },
+      )
+          : Text(
+        'TMTL List',
+        style: h2.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      actions: [
+        /// filter icon
+        GestureDetector(
+          onTap: () {},
           child: Padding(
-            padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-            child: Icon(
-              Icons.arrow_back,
-              color: kBlackLight,
+            padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+            child: SvgPicture.asset(
+              AssetPath.filterIconSvg,
+              semanticsLabel: 'Filter Icon',
             ),
           ),
         ),
-        title: tmtlController.isClickSearch.value
-            ? KTextFiled(
-                controller: searchController,
-                hintText: 'Search here',
-                isBorder: false,
-                onChanged: (value) {
-                  print(value);
-                },
-              )
-            : Text(
-                'TMTL List',
-                style: h2.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-        actions: [
-          /// filter icon
-          GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: SvgPicture.asset(
-                AssetPath.filterIconSvg,
-                semanticsLabel: 'Filter Icon',
-              ),
+
+        /// horizontal space
+        addHorizontalSpace(2),
+
+        /// search and close icon
+        GestureDetector(
+          onTap: tmtlController.changeSearchStatus,
+          child: Padding(
+            padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+            child: tmtlController.isClickSearch.value
+                ? Icon(
+              Icons.clear,
+              size: 20,
+              color: mainColor,
+            )
+                : SvgPicture.asset(
+              AssetPath.searchIconSvg,
+              semanticsLabel: 'Search Icon',
             ),
           ),
-
-          /// horizontal space
-          addHorizontalSpace(2),
-
-          /// search and close icon
-          GestureDetector(
-            onTap: tmtlController.changeSearchStatus,
-            child: Padding(
-              padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: tmtlController.isClickSearch.value
-                  ? Icon(
-                      Icons.clear,
-                      size: 20,
-                      color: mainColor,
-                    )
-                  : SvgPicture.asset(
-                      AssetPath.searchIconSvg,
-                      semanticsLabel: 'Search Icon',
-                    ),
-            ),
-          ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
   Widget _buildTMTLBody(BuildContext context) {
     return Column(
@@ -205,27 +216,41 @@ class TMTLListScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildInTMTLList() => ListView.separated(
-        itemCount: tmtlDataList.length,
-        itemBuilder: (context, index) {
-          return tmtlDataList[index].status == TMTLStatus.In
-              ? TMTLItemCard(tmtlData: tmtlDataList[index])
-              : Container();
-        },
-        separatorBuilder: (context, index) => addVerticalSpace(
-          Dimensions.paddingSizeSmall,
-        ),
-      );
+  Widget _buildInTMTLList() {
+    final List<TMTLModel> tmtlInDataList= [];
+    for (var value in tmtlDataList) {
+      if(value.status == TMTLStatus.In){
+        tmtlInDataList.add(value);
+      }
+    }
 
-  Widget _buildOutTMTLList() => ListView.separated(
-        itemCount: tmtlDataList.length,
-        itemBuilder: (context, index) {
-          return tmtlDataList[index].status == TMTLStatus.Out
-              ? TMTLItemCard(tmtlData: tmtlDataList[index])
-              : Container();
-        },
-        separatorBuilder: (context, index) => addVerticalSpace(
-          Dimensions.paddingSizeSmall,
-        ),
-      );
+    return ListView.separated(
+      itemCount: tmtlInDataList.length,
+      itemBuilder: (context, index) {
+        return TMTLItemCard(tmtlData: tmtlInDataList[index]);
+      },
+      separatorBuilder: (context, index) => addVerticalSpace(
+        Dimensions.paddingSizeSmall,
+      ),
+    );
+  }
+
+  Widget _buildOutTMTLList() {
+    final List<TMTLModel> tmtlOutDataList= [];
+    for (var value in tmtlDataList) {
+      if(value.status == TMTLStatus.Out){
+        tmtlOutDataList.add(value);
+      }
+    }
+
+    return ListView.separated(
+      itemCount: tmtlOutDataList.length,
+      itemBuilder: (context, index) {
+        return TMTLItemCard(tmtlData: tmtlOutDataList[index]);
+      },
+      separatorBuilder: (context, index) => addVerticalSpace(
+        Dimensions.paddingSizeSmall,
+      ),
+    );
+  }
 }

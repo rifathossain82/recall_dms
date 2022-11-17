@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 Widget addVerticalSpace(double space) {
   return SizedBox(height: space);
@@ -55,14 +57,11 @@ String? customDateFormat(DateTime tm) {
 
   if (difference.inDays == 0 && tm.day == today.day) {
     day = "Today";
-  }
-  else if (difference.inDays == 0 && tm.day != today.day) {
+  } else if (difference.inDays == 0 && tm.day != today.day) {
     day = "Tomorrow";
-  }
-  else if (difference.inDays == 1) {
+  } else if (difference.inDays == 1) {
     day = "Yesterday";
-  }
-  else{
+  } else {
     switch (tm.weekday) {
       case 1:
         day = "Monday";
@@ -89,4 +88,27 @@ String? customDateFormat(DateTime tm) {
   }
 
   return '$day, ${tm.day} $month ${tm.year}';
+}
+
+
+void KSnackBar({required String message, required Color bgColor}) {
+  Get.showSnackbar(
+    GetSnackBar(
+      backgroundColor: bgColor,
+      message: message,
+      maxWidth: 1170,
+      duration: const Duration(seconds: 3),
+      snackStyle: SnackStyle.FLOATING,
+      margin: const EdgeInsets.all(10),
+      borderRadius: 5,
+      isDismissible: true,
+      dismissDirection: DismissDirection.horizontal,
+    ),
+  );
+}
+
+void kPrint(dynamic data){
+  if (kDebugMode) {
+    print(data);
+  }
 }

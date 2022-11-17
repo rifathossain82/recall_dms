@@ -33,7 +33,11 @@ class _SplashScreenState extends State<SplashScreen>
     if (LocalStorage.getData(key: LocalStorageKey.intro) == null) {
       Get.offAllNamed(RouteGenerator.intro);
     } else {
-      Get.offAllNamed(RouteGenerator.login);
+      if (LocalStorage.getData(key: LocalStorageKey.token) == null) {
+        Get.offAllNamed(RouteGenerator.login);
+      } else {
+        Get.offAllNamed(RouteGenerator.dashboard);
+      }
     }
   }
 

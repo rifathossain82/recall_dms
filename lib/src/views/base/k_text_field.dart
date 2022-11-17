@@ -7,6 +7,7 @@ class KTextFiled extends StatelessWidget {
   const KTextFiled({
     Key? key,
     required this.controller,
+    this.focusNode,
     this.hintText,
     this.labelText,
     this.onChanged,
@@ -18,6 +19,7 @@ class KTextFiled extends StatelessWidget {
   }) : super(key: key);
 
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final String? hintText;
   final String? labelText;
   final Function(String value)? onChanged;
@@ -31,6 +33,7 @@ class KTextFiled extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       onChanged: onChanged,
       maxLines: 1,
       keyboardType: inputType,

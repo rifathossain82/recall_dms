@@ -1,6 +1,6 @@
 import 'package:get_storage/get_storage.dart';
 
-enum LocalStorageKey{intro}
+enum LocalStorageKey{intro, token}
 
 class LocalStorage{
   static final _box = GetStorage();
