@@ -9,12 +9,16 @@ class VehicleController extends GetxController{
   var vehicleList = [].obs;
   var isLoading = false.obs;
 
-  Rx<DateTime> vehicleListScreenDate = DateTime.now().obs;
-  var isClickSearch = false.obs;
+  Rx<DateTime> listScreenDate = DateTime.now().obs;
+  Rx<DateTime> detailsScreenDate = DateTime.now().obs;
+  var isClickListScreenSearch = false.obs;
+  var isClickDetailsScreenSearch = false.obs;
 
-  changeVehicleListScreenDateTime(DateTime dateTime) => vehicleListScreenDate.value = dateTime;
+  changeListScreenDateTime(DateTime dateTime) => listScreenDate.value = dateTime;
+  changeDetailsScreenDateTime(DateTime dateTime) => detailsScreenDate.value = dateTime;
 
-  void changeSearchStatus() => isClickSearch.value = !isClickSearch.value;
+  void changeListScreenSearchStatus() => isClickListScreenSearch.value = !isClickListScreenSearch.value;
+  void changeDetailsScreenSearchStatus() => isClickDetailsScreenSearch.value = !isClickDetailsScreenSearch.value;
 
   @override
   void onInit() {

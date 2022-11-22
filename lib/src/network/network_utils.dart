@@ -1,15 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:get/get.dart' hide Response;
 import 'package:http/http.dart';
+import 'package:recall/routes/route.dart';
 import 'package:recall/src/services/local_storage.dart';
+import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/views/base/helper.dart';
 
 class Network {
-  static String noInternetMessage = "Check your connection!";
+  static var noInternetMessage = "Please check your connection!";
 
   static getRequest({required String api, params}) async {
+    if(!await hasInternet){
+      throw noInternetMessage;
+    }
+
     kPrint("\nYou hit: $api");
-    kPrint("\nRequest Params: $params");
+    kPrint("Request Params: $params");
 
     var headers = {
       'Accept': 'application/json',
@@ -24,18 +31,32 @@ class Network {
   }
 
   static postRequest({required String api, body}) async {
+    if(!await hasInternet){
+      throw noInternetMessage;
+    }
+
     kPrint('\nYou hit: $api');
     kPrint('Request Body: ${jsonEncode(body)}');
+
+    var headers = {
+      'Accept': 'application/json',
+      "Authorization": "Bearer ${LocalStorage.getData(key: LocalStorageKey.token)}"
+    };
 
     Response response = await post(
       Uri.parse(api),
       body: body,
+      headers: headers,
     );
     return response;
   }
 
   static handleResponse(Response response) async {
     try {
+      if(!await hasInternet){
+        throw noInternetMessage;
+      }
+
       if (response.statusCode >= 200 && response.statusCode <= 210) {
         kPrint('SuccessCode: ${response.statusCode}');
         kPrint('SuccessResponse: ${response.body}');
@@ -46,7 +67,7 @@ class Network {
           return response.body;
         }
       } else if (response.statusCode == 401) {
-        throw "Unauthorized";
+        _logout();
       } else if (response.statusCode == 500) {
         throw "Server Error";
       } else {
@@ -61,11 +82,17 @@ class Network {
         throw msg;
       }
     } on SocketException catch (e) {
-      throw "Not Internet Connection";
+      throw noInternetMessage;
     } on FormatException catch (e) {
       throw "Bad response format";
     } catch (e) {
       throw e.toString();
     }
+  }
+
+  static void _logout(){
+    KSnackBar(message: 'Unauthorized', bgColor: failedColor);
+    LocalStorage.removeData(key: LocalStorageKey.token);
+    Get.toNamed(RouteGenerator.login);
   }
 }

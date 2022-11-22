@@ -1,24 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:recall/routes/route.dart';
+import 'package:recall/src/controllers/auth_controller.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
+import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_badge.dart';
 import 'package:recall/src/views/screens/home/home_screen.dart';
+import 'package:recall/src/views/screens/notification/notification_screen.dart';
+import 'package:recall/src/views/screens/profile/profile_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({Key? key}) : super(key: key);
 
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
+  final AuthController authController = Get.put(AuthController());
 
   List<Widget> _buildScreens() {
     return [
       const HomeScreen(),
-      Container(),
-      Container(),
+      const NotificationScreen(),
+      ProfileScreen(),
     ];
   }
 

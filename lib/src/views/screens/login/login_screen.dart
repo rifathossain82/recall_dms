@@ -27,42 +27,36 @@ class LoginScreen extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(Dimensions.paddingSizeDefault),
           child: SingleChildScrollView(
-            child: Obx(
-              () {
-                return Column(
-                  children: [
-                    /// logo and loginWithPassword text
-                    addVerticalSpace(Get.height * 0.05),
-                    const KLogo(),
-                    Text(
-                      'Login with password',
-                      style: GoogleFonts.roboto(
-                        textStyle: h4.copyWith(
-                          fontWeight: FontWeight.w300,
-                          color: kBlackLight,
-                        ),
+            child: Obx(() {
+              return Column(
+                children: [
+                  /// logo and loginWithPassword text
+                  addVerticalSpace(Get.height * 0.05),
+                  const KLogo(),
+                  Text(
+                    'Login with password',
+                    style: GoogleFonts.roboto(
+                      textStyle: h4.copyWith(
+                        fontWeight: FontWeight.w300,
+                        color: kBlackLight,
                       ),
                     ),
+                  ),
 
-                    /// email/phone textField
-                    addVerticalSpace(Get.height * 0.05),
-                    _buildEmailOrPhoneTextFiled(),
+                  /// email/phone textField
+                  addVerticalSpace(Get.height * 0.05),
+                  _buildEmailOrPhoneTextFiled(),
 
-                    /// password textField
-                    addVerticalSpace(Get.height * 0.03),
-                    _buildPasswordTextFiled(),
+                  /// password textField
+                  addVerticalSpace(Get.height * 0.03),
+                  _buildPasswordTextFiled(),
 
-                    /// login button
-                    addVerticalSpace(Get.height * 0.05),
-                    _buildLoginButton(),
-
-                    /// forgot password button
-                    // addVerticalSpace(Get.height * 0.025),
-                    // const ForgotPasswordButton(),
-                  ],
-                );
-              }
-            ),
+                  /// login button
+                  addVerticalSpace(Get.height * 0.05),
+                  _buildLoginButton(),
+                ],
+              );
+            }),
           ),
         ),
       ),
@@ -76,35 +70,20 @@ class LoginScreen extends StatelessWidget {
       );
 
   Widget _buildPasswordTextFiled() => KTextFiled(
-    controller: passwordController,
-    labelText: 'Password',
-    inputAction: TextInputAction.done,
-    obscureValue: authController.passwordVisibility.value,
-    suffix: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        GestureDetector(
-          onTap: authController.showPassword,
-          child: SvgPicture.asset(
-            AssetPath.visibilityOnIconSvg,
-            color: authController.passwordVisibility.value
-                ? kBlackLight
-                : kGreyDeep1,
+        controller: passwordController,
+        labelText: 'Password',
+        inputAction: TextInputAction.done,
+        obscureValue: authController.passwordVisibility.value,
+        suffix: GestureDetector(
+          onTap: authController.changePasswordVisibility,
+          child: Icon(
+            authController.passwordVisibility.value
+                ? Icons.visibility_off
+                : Icons.visibility,
+            color: kBlackLight,
           ),
         ),
-        addHorizontalSpace(Dimensions.paddingSizeDefault),
-        GestureDetector(
-          onTap: authController.hidePassword,
-          child: SvgPicture.asset(
-            AssetPath.visibilityOffIconSvg,
-            color: authController.passwordVisibility.value
-                ? kGreyDeep1
-                : kBlackLight,
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildLoginButton() => KButton(
         onPressed: _loginMethod,
@@ -113,7 +92,9 @@ class LoginScreen extends StatelessWidget {
                 height: 20,
                 width: 20,
                 alignment: Alignment.center,
-                child: CircularProgressIndicator(color: Colors.white,),
+                child: CircularProgressIndicator(
+                  color: kWhite,
+                ),
               )
             : Text(
                 'Login',

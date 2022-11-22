@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -90,7 +91,6 @@ String? customDateFormat(DateTime tm) {
   return '$day, ${tm.day} $month ${tm.year}';
 }
 
-
 void KSnackBar({required String message, required Color bgColor}) {
   Get.showSnackbar(
     GetSnackBar(
@@ -107,8 +107,18 @@ void KSnackBar({required String message, required Color bgColor}) {
   );
 }
 
-void kPrint(dynamic data){
+void kPrint(dynamic data) {
   if (kDebugMode) {
     print(data);
+  }
+}
+
+/// to check internet connection
+Future<bool> get hasInternet async {
+  var result = await (Connectivity().checkConnectivity());
+  if (result == ConnectivityResult.none) {
+    return false;
+  } else {
+    return true;
   }
 }

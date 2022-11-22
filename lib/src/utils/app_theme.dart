@@ -10,6 +10,11 @@ class AppThemeData {
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: kLightBgColor,
     primarySwatch: kLightPrimarySwatchColor,
+    appBarTheme: AppBarTheme(
+      backgroundColor: kWhite,
+      foregroundColor: kBlackLight,
+      elevation: 0,
+    ),
     // primaryColor: appColorPrimary,
     // primaryColorDark: appColorPrimary,
     // errorColor: Colors.red,

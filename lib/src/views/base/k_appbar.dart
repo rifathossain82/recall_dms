@@ -17,6 +17,7 @@ class KAppBar extends StatelessWidget {
     return Container(
       height: appBarHeight,
       width: appBarWidth,
+      padding: leading == null ? EdgeInsets.only(left: Dimensions.paddingSizeSmall) : EdgeInsets.zero,
       margin: EdgeInsets.only(
         left: Dimensions.paddingSizeDefault,
         right: Dimensions.paddingSizeDefault,

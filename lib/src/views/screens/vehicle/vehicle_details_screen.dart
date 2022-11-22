@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:recall/src/controllers/vehicle_controller.dart';
 import 'package:recall/src/models/stepper_data_model.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/utils/asset_path.dart';
@@ -9,70 +11,100 @@ import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
 import 'package:recall/src/views/base/k_date.dart';
+import 'package:recall/src/views/base/k_text_field.dart';
 import 'package:recall/src/views/screens/vehicle/components/custom_stepper.dart';
 
 class VehicleDetailsScreen extends StatelessWidget {
-  const VehicleDetailsScreen({Key? key}) : super(key: key);
+  VehicleDetailsScreen({Key? key}) : super(key: key);
+
+  final vehicleController = Get.put(VehicleController());
+  TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            /// appBar content
-            _buildVehicleDetailsAppBar(context),
+        child: Obx(
+          () {
+            return Column(
+              children: [
+                /// appBar content
+                _buildVehicleDetailsAppBar(context),
 
-            /// body content
-            Expanded(
-              child: _buildVehicleDetailsBody(),
-            ),
-          ],
+                /// body content
+                Expanded(
+                  child: _buildVehicleDetailsBody(context),
+                ),
+              ],
+            );
+          }
         ),
       ),
     );
   }
 
-  Widget _buildVehicleDetailsAppBar(BuildContext context) => KAppBar(
-        leading: GestureDetector(
-          onTap: () => context.popScreen(),
+  Widget _buildVehicleDetailsAppBar(BuildContext context) {
+    if(vehicleController.isClickDetailsScreenSearch.value){
+      searchFocusNode.requestFocus();
+    }
+    return  KAppBar(
+      leading: GestureDetector(
+        onTap: () {
+          Get.delete<VehicleController>();
+          context.popScreen();
+        },
+        child: Padding(
+          padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+          child: Icon(
+            Icons.arrow_back,
+            color: kBlackLight,
+          ),
+        ),
+      ),
+      title: vehicleController.isClickDetailsScreenSearch.value
+          ? KTextFiled(
+        controller: searchController,
+        focusNode: searchFocusNode,
+        hintText: 'Search here',
+        isBorder: false,
+        onChanged: (value) {
+          print(value);
+        },
+      ) : Text(
+        'Vehicle 001',
+        style: h2.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      actions: [
+        GestureDetector(
+          onTap: vehicleController.changeDetailsScreenSearchStatus,
           child: Padding(
-            padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-            child: Icon(
-              Icons.arrow_back,
-              color: kBlackLight,
+            padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+            child: vehicleController.isClickDetailsScreenSearch.value
+                ? Icon(
+              Icons.clear,
+              size: 20,
+              color: mainColor,
+            )
+                : SvgPicture.asset(
+              AssetPath.searchIconSvg,
+              semanticsLabel: 'Search Icon',
             ),
           ),
         ),
-        title: Text(
-          'Vehicle 001',
-          style: h2.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: SvgPicture.asset(
-                AssetPath.searchIconSvg,
-                semanticsLabel: 'Search Icon',
-              ),
-            ),
-          ),
-        ],
-      );
+      ],
+    );
+  }
 
-  Widget _buildVehicleDetailsBody() => Column(
+  Widget _buildVehicleDetailsBody(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// date and calender widget
           KDate(
-            onPressed: () {
-              print('Please create method.');
-            },
-            dateTime: DateTime.now(),
+            onPressed: () => _selectDate(context),
+            dateTime: vehicleController.detailsScreenDate.value,
           ),
 
           /// stepper
@@ -84,6 +116,20 @@ class VehicleDetailsScreen extends StatelessWidget {
           addVerticalSpace(Dimensions.paddingSizeExtraLarge),
         ],
       );
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: vehicleController.detailsScreenDate.value,
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null &&
+        picked != vehicleController.detailsScreenDate.value) {
+      vehicleController.changeDetailsScreenDateTime(picked);
+      kPrint('${picked.month}/${picked.day}/${picked.year}');
+    }
+  }
 
   Widget _buildStepper() {
     final stepperDataList = [

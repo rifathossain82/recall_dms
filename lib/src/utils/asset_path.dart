@@ -4,6 +4,7 @@ class AssetPath{
   static const String introImage1 = 'assets/images/introImage1.png';
   static const String introImage2 = 'assets/images/introImage2.png';
   static const String introImage3 = 'assets/images/introImage3.png';
+  static const String profileDemo = 'assets/images/profile_demo.png';
 
 
   static const String locationIconSvgSvg = 'assets/icons/location_icon.svg';
