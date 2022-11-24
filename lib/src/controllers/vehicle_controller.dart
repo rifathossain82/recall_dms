@@ -5,7 +5,7 @@ import 'package:recall/src/network/network_utils.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/views/base/helper.dart';
 
-class VehicleController extends GetxController{
+class VehicleController extends GetxController {
   var vehicleList = [].obs;
   var isLoading = false.obs;
 
@@ -14,11 +14,17 @@ class VehicleController extends GetxController{
   var isClickListScreenSearch = false.obs;
   var isClickDetailsScreenSearch = false.obs;
 
-  changeListScreenDateTime(DateTime dateTime) => listScreenDate.value = dateTime;
-  changeDetailsScreenDateTime(DateTime dateTime) => detailsScreenDate.value = dateTime;
+  changeListScreenDateTime(DateTime dateTime) =>
+      listScreenDate.value = dateTime;
 
-  void changeListScreenSearchStatus() => isClickListScreenSearch.value = !isClickListScreenSearch.value;
-  void changeDetailsScreenSearchStatus() => isClickDetailsScreenSearch.value = !isClickDetailsScreenSearch.value;
+  changeDetailsScreenDateTime(DateTime dateTime) =>
+      detailsScreenDate.value = dateTime;
+
+  void changeListScreenSearchStatus() =>
+      isClickListScreenSearch.value = !isClickListScreenSearch.value;
+
+  void changeDetailsScreenSearchStatus() =>
+      isClickDetailsScreenSearch.value = !isClickDetailsScreenSearch.value;
 
   @override
   void onInit() {
@@ -26,9 +32,7 @@ class VehicleController extends GetxController{
     getVehicleList();
   }
 
-  void getVehicleList({
-    String? date,
-  }) async {
+  void getVehicleList({String? date}) async {
     try {
       isLoading(true);
       vehicleList.value = [];

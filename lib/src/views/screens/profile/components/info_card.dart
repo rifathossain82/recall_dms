@@ -37,25 +37,13 @@ class ProfileInfoCard extends StatelessWidget {
             ),
             _buildDivider(),
             ProfileInfoItem(
-              title: 'Change Number',
+              title: 'Phone Number',
               data: '01882508771',
               onPressed: () {},
             ),
             _buildDivider(),
             ProfileInfoItem(
-              title: 'Add Email',
-              data: 'Not Set',
-              onPressed: () {},
-            ),
-            _buildDivider(),
-            ProfileInfoItem(
-              title: 'Gender',
-              data: 'Not Set',
-              onPressed: () {},
-            ),
-            _buildDivider(),
-            ProfileInfoItem(
-              title: 'Birthday',
+              title: 'Email',
               data: 'Not Set',
               onPressed: () {},
             ),

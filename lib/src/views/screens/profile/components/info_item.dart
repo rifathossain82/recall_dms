@@ -40,13 +40,13 @@ class ProfileInfoItem extends StatelessWidget {
               ),
             ),
           ),
-          addHorizontalSpace(Dimensions.paddingSizeDefault),
-          SvgPicture.asset(
-            AssetPath.arrowRightIconSvg,
-            semanticsLabel: 'Arrow Right',
-            color: kGreyDeep2,
-            height: 8,
-          ),
+          // addHorizontalSpace(Dimensions.paddingSizeDefault),
+          // SvgPicture.asset(
+          //   AssetPath.arrowRightIconSvg,
+          //   semanticsLabel: 'Arrow Right',
+          //   color: kGreyDeep2,
+          //   height: 8,
+          // ),
         ],
       ),
     );

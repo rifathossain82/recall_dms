@@ -141,8 +141,7 @@ class VehicleListScreen extends StatelessWidget {
     if (picked != null &&
         picked != vehicleController.listScreenDate.value) {
       vehicleController.changeListScreenDateTime(picked);
-      vehicleController.getVehicleList(
-          date: '${picked.month}/${picked.day}/${picked.year}');
+      vehicleController.getVehicleList(date: '${picked.month}/${picked.day}/${picked.year}');
       kPrint('${picked.month}/${picked.day}/${picked.year}');
     }
   }

@@ -1,69 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:recall/src/controllers/tmtl_controller.dart';
+import 'package:recall/src/models/tmtl_data.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
-import 'package:recall/src/services/fake_data.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
+import 'package:recall/src/views/base/k_text_field.dart';
 import 'package:recall/src/views/screens/tmtl/components/tmtl_item_card.dart';
 
 class TMTLDetailsScreen extends StatelessWidget {
-  const TMTLDetailsScreen({Key? key, required this.id}) : super(key: key);
+  final TMTLData tmtl;
 
-  final String id;
+  TMTLDetailsScreen({Key? key, required this.tmtl}) : super(key: key);
+
+  final TMTLController _tmtlController = Get.put(TMTLController());
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            /// appBar content
-            _buildTMTLDetailsAppBar(context),
+        child: Obx(
+          () {
+            return Column(
+              children: [
+                /// appBar content
+                _buildTMTLDetailsAppBar(context),
 
-            /// body content
-            Expanded(
-              child: _buildTMTLDetailsBody(),
-            ),
-          ],
+                /// body content
+                Expanded(
+                  child: _buildTMTLDetailsBody(),
+                ),
+              ],
+            );
+          }
         ),
       ),
     );
   }
 
-  Widget _buildTMTLDetailsAppBar(BuildContext context) => KAppBar(
-        leading: GestureDetector(
-          onTap: () => context.popScreen(),
+  Widget _buildTMTLDetailsAppBar(BuildContext context) {
+    if (_tmtlController.isClickDetailsScreenSearch.value) {
+      _focusNode.requestFocus();
+    }
+    return KAppBar(
+      leading: GestureDetector(
+        onTap: () => context.popScreen(),
+        child: Padding(
+          padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+          child: Icon(
+            Icons.arrow_back,
+            color: kBlackLight,
+          ),
+        ),
+      ),
+      title: _tmtlController.isClickDetailsScreenSearch.value
+          ? KTextFiled(
+        controller: _searchController,
+        focusNode: _focusNode,
+        hintText: 'Search here',
+        isBorder: false,
+        onChanged: (value) {
+          print(value);
+        },
+      )
+          : Text(
+        'TMTL ${tmtl.id}',
+        style: h2.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      actions: [
+        GestureDetector(
+          onTap: _tmtlController.changeDetailsScreenSearchStatus,
           child: Padding(
-            padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-            child: Icon(
-              Icons.arrow_back,
-              color: kBlackLight,
+            padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+            child: _tmtlController.isClickDetailsScreenSearch.value
+                ? Icon(
+              Icons.clear,
+              size: 20,
+              color: mainColor,
+            )
+                : SvgPicture.asset(
+              AssetPath.searchIconSvg,
+              semanticsLabel: 'Search Icon',
             ),
           ),
         ),
-        title: Text(
-          'TMTL $id',
-          style: h2.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-              child: SvgPicture.asset(
-                AssetPath.searchIconSvg,
-                semanticsLabel: 'Search Icon',
-              ),
-            ),
-          ),
-        ],
-      );
+      ],
+    );
+  }
 
   Widget _buildTMTLDetailsBody() {
     return ListView(
@@ -88,7 +120,7 @@ class TMTLDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildItemCard() => TMTLItemCard(
-        tmtlData: tmtlDataList[0],
+        tmtlData: tmtl,
         isNavigation: false,
       );
 
@@ -112,7 +144,7 @@ class TMTLDetailsScreen extends StatelessWidget {
             ),
           ),
           title: Text(
-            tmtlDataList[0].address,
+            'dasf',
             style: h3.copyWith(
               fontWeight: FontWeight.w500,
             ),

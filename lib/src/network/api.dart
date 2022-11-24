@@ -4,4 +4,5 @@ class Api{
   static String get logout => '$_baseUrl/logout';
   static String get changePassword => '$_baseUrl/reset-password';
   static String get getAllVehicle => '$_baseUrl/driver/vehicle/index';
+  static String get getAllTMTL => '$_baseUrl/driver/tmtl/index';
 }

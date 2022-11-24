@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:recall/src/controllers/tmtl_controller.dart';
-import 'package:recall/src/services/fake_data.dart';
+import 'package:recall/src/models/tmtl_data.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
@@ -11,6 +11,7 @@ import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
 import 'package:recall/src/views/base/k_date.dart';
 import 'package:recall/src/views/base/k_text_field.dart';
+import 'package:recall/src/views/base/no_data_found.dart';
 import 'package:recall/src/views/screens/tmtl/components/tabBar_item.dart';
 import 'package:recall/src/views/screens/tmtl/components/tmtl_item_card.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
@@ -44,7 +45,7 @@ class TMTLListScreen extends StatelessWidget {
   }
 
   Widget _buildTMTLAppBar(BuildContext context) {
-    if(tmtlController.isClickSearch.value){
+    if (tmtlController.isClickListScreenSearch.value) {
       searchFocusNode.requestFocus();
     }
     return KAppBar(
@@ -62,22 +63,22 @@ class TMTLListScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: tmtlController.isClickSearch.value
+      title: tmtlController.isClickListScreenSearch.value
           ? KTextFiled(
-        controller: searchController,
-        focusNode: searchFocusNode,
-        hintText: 'Search here',
-        isBorder: false,
-        onChanged: (value) {
-          print(value);
-        },
-      )
+              controller: searchController,
+              focusNode: searchFocusNode,
+              hintText: 'Search here',
+              isBorder: false,
+              onChanged: (value) {
+                print(value);
+              },
+            )
           : Text(
-        'TMTL List',
-        style: h2.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+              'TMTL List',
+              style: h2.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
       actions: [
         /// filter icon
         GestureDetector(
@@ -96,19 +97,19 @@ class TMTLListScreen extends StatelessWidget {
 
         /// search and close icon
         GestureDetector(
-          onTap: tmtlController.changeSearchStatus,
+          onTap: tmtlController.changeListScreenSearchStatus,
           child: Padding(
             padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-            child: tmtlController.isClickSearch.value
+            child: tmtlController.isClickListScreenSearch.value
                 ? Icon(
-              Icons.clear,
-              size: 20,
-              color: mainColor,
-            )
+                    Icons.clear,
+                    size: 20,
+                    color: mainColor,
+                  )
                 : SvgPicture.asset(
-              AssetPath.searchIconSvg,
-              semanticsLabel: 'Search Icon',
-            ),
+                    AssetPath.searchIconSvg,
+                    semanticsLabel: 'Search Icon',
+                  ),
           ),
         ),
       ],
@@ -159,6 +160,7 @@ class TMTLListScreen extends StatelessWidget {
     );
     if (picked != null && picked != tmtlController.selectedDate.value) {
       tmtlController.changeDateTime(picked);
+      tmtlController.getTMTLList(date: '${picked.month}/${picked.day}/${picked.year}');
       print(picked);
     }
   }
@@ -206,51 +208,78 @@ class TMTLListScreen extends StatelessWidget {
         ],
       );
 
-  Widget _buildAllTMTLList() => ListView.separated(
-        itemCount: tmtlDataList.length,
+  Widget _buildAllTMTLList() {
+    return tmtlController.isLoading.value
+        ? const Center(child: CircularProgressIndicator())
+        : tmtlController.tmtlList.isEmpty
+            ? const NoDataFound()
+            : ListView.separated(
+                shrinkWrap: true,
+                itemCount: tmtlController.tmtlList.length,
+                itemBuilder: (context, index) {
+                  return TMTLItemCard(
+                    tmtlData: tmtlController.tmtlList[index],
+                  );
+                },
+                separatorBuilder: (context, index) => addVerticalSpace(
+                  Dimensions.paddingSizeSmall,
+                ),
+              );
+  }
+
+  Widget _buildInTMTLList() {
+    if(tmtlController.isLoading.value){
+      return const Center(child: CircularProgressIndicator());
+    } else if(tmtlController.tmtlList.isEmpty){
+      return const NoDataFound();
+    } else{
+      final List<TMTLData> tmtlInDataList = [];
+      for (TMTLData value in tmtlController.tmtlList) {
+        if (value.type == TMTLType.IN.name) {
+          tmtlInDataList.add(value);
+        }
+      }
+
+      return ListView.separated(
+        shrinkWrap: true,
+        itemCount: tmtlInDataList.length,
         itemBuilder: (context, index) {
-          return TMTLItemCard(tmtlData: tmtlDataList[index]);
+          return TMTLItemCard(
+            tmtlData: tmtlInDataList[index],
+          );
         },
         separatorBuilder: (context, index) => addVerticalSpace(
           Dimensions.paddingSizeSmall,
         ),
       );
-
-  Widget _buildInTMTLList() {
-    final List<TMTLModel> tmtlInDataList= [];
-    for (var value in tmtlDataList) {
-      if(value.status == TMTLStatus.In){
-        tmtlInDataList.add(value);
-      }
     }
-
-    return ListView.separated(
-      itemCount: tmtlInDataList.length,
-      itemBuilder: (context, index) {
-        return TMTLItemCard(tmtlData: tmtlInDataList[index]);
-      },
-      separatorBuilder: (context, index) => addVerticalSpace(
-        Dimensions.paddingSizeSmall,
-      ),
-    );
   }
 
   Widget _buildOutTMTLList() {
-    final List<TMTLModel> tmtlOutDataList= [];
-    for (var value in tmtlDataList) {
-      if(value.status == TMTLStatus.Out){
-        tmtlOutDataList.add(value);
+    if(tmtlController.isLoading.value){
+      return const Center(child: CircularProgressIndicator());
+    } else if(tmtlController.tmtlList.isEmpty){
+      return const NoDataFound();
+    } else{
+      final List<TMTLData> tmtlOutDataList = [];
+      for (TMTLData value in tmtlController.tmtlList) {
+        if (value.type == TMTLType.OUT.name) {
+          tmtlOutDataList.add(value);
+        }
       }
-    }
 
-    return ListView.separated(
-      itemCount: tmtlOutDataList.length,
-      itemBuilder: (context, index) {
-        return TMTLItemCard(tmtlData: tmtlOutDataList[index]);
-      },
-      separatorBuilder: (context, index) => addVerticalSpace(
-        Dimensions.paddingSizeSmall,
-      ),
-    );
+      return ListView.separated(
+        shrinkWrap: true,
+        itemCount: tmtlOutDataList.length,
+        itemBuilder: (context, index) {
+          return TMTLItemCard(
+            tmtlData: tmtlOutDataList[index],
+          );
+        },
+        separatorBuilder: (context, index) => addVerticalSpace(
+          Dimensions.paddingSizeSmall,
+        ),
+      );
+    }
   }
 }
