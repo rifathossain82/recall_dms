@@ -56,7 +56,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
                 /// change password button
                 addVerticalSpace(Get.height * 0.05),
-                _buildChangePasswordButton(),
+                _buildChangePasswordButton(context),
               ],
             );
           }),
@@ -113,8 +113,8 @@ class ChangePasswordScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildChangePasswordButton() => KButton(
-        onPressed: _changePassword,
+  Widget _buildChangePasswordButton(BuildContext context) => KButton(
+        onPressed: () => _changePassword(context),
         child: authController.isLoading.value
             ? Container(
                 height: 20,
@@ -136,33 +136,42 @@ class ChangePasswordScreen extends StatelessWidget {
       );
 
 
-  void _changePassword(){
+  void _changePassword(BuildContext context) async{
     if (oldPassword.text.isEmpty) {
-      KSnackBar(
+      kSnackBar(
         message: 'Please enter your old password!',
         bgColor: failedColor,
       );
     } else if (newPassword.text.isEmpty) {
-      KSnackBar(
+      kSnackBar(
         message: 'Please enter a new password!',
         bgColor: failedColor,
       );
     } else if (confirmPassword.text.isEmpty) {
-      KSnackBar(
+      kSnackBar(
         message: 'Please enter confirm password!',
         bgColor: failedColor,
       );
     } else if (newPassword.text != confirmPassword.text) {
-      KSnackBar(
+      kSnackBar(
         message: 'The password confirmation does not match!',
         bgColor: failedColor,
       );
     } else {
-      authController.changePassword(
-        oldPassword: oldPassword.text.trim(),
-        newPassword: newPassword.text.trim(),
-        confirmPassword: confirmPassword.text.trim(),
+      bool? result = await kConfirmDialog(
+        context: context,
+        title: 'Are you sure you want to change password?',
+        negativeActionText: 'Cancel',
+        positiveActionText: 'Change',
       );
+
+      if(result!){
+        authController.changePassword(
+          oldPassword: oldPassword.text.trim(),
+          newPassword: newPassword.text.trim(),
+          confirmPassword: confirmPassword.text.trim(),
+        );
+      }
     }
   }
 }

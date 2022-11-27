@@ -109,12 +109,12 @@ class LoginScreen extends StatelessWidget {
 
   void _loginMethod() {
     if (emailOrPhoneController.text.isEmpty) {
-      KSnackBar(
+      kSnackBar(
         message: 'Please enter your phone or email!',
         bgColor: failedColor,
       );
     } else if (passwordController.text.isEmpty) {
-      KSnackBar(
+      kSnackBar(
         message: 'Please enter your password!',
         bgColor: failedColor,
       );

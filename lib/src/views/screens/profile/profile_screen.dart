@@ -24,21 +24,23 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            /// appBar content
-            _buildProfileAppBar(context),
+    return Obx(() {
+      return Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              /// appBar content
+              _buildProfileAppBar(context),
 
-            /// body content
-            Expanded(
-              child: _buildProfileBody(context),
-            ),
-          ],
+              /// body content
+              Expanded(
+                child: _buildProfileBody(context),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildProfileAppBar(BuildContext context) {
@@ -101,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
           addVerticalSpace(Dimensions.paddingSizeDefault),
 
           /// logout button
-          _buildLogoutButton(),
+          _buildLogoutButton(context),
           addVerticalSpace(40),
         ],
       ),
@@ -132,34 +134,34 @@ class ProfileScreen extends StatelessWidget {
         ),
         child: KShadowOutlineButton(
           onPressed: () => Get.toNamed(RouteGenerator.changePassword),
-          child: authController.isLoading.value
-              ? Container(
-                  height: 20,
-                  width: 20,
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(
-                    color: kWhite,
-                  ),
-                )
-              : Text(
-                  'Change Password',
-                  style: GoogleFonts.roboto(
-                    textStyle: h2.copyWith(
-                      color: mainColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
+          child: Text(
+            'Change Password',
+            style: GoogleFonts.roboto(
+              textStyle: h2.copyWith(
+                color: mainColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ),
       );
 
-  Widget _buildLogoutButton() => Padding(
+  Widget _buildLogoutButton(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(
           horizontal: Dimensions.paddingSizeDefault,
         ),
         child: KShadowButton(
-          onPressed: () {
-            authController.logout();
+          onPressed: () async {
+            bool? result = await kConfirmDialog(
+              context: context,
+              title: 'Are you sure you want to logout?',
+              negativeActionText: 'Cancel',
+              positiveActionText: 'Logout',
+            );
+
+            if(result!){
+              authController.logout();
+            }
           },
           child: authController.isLoading.value
               ? Container(

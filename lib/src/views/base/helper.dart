@@ -2,6 +2,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recall/src/utils/color.dart';
+import 'package:recall/src/utils/dimensions.dart';
+import 'package:recall/src/utils/styles.dart';
 
 Widget addVerticalSpace(double space) {
   return SizedBox(height: space);
@@ -91,7 +94,7 @@ String? customDateFormat(DateTime tm) {
   return '$day, ${tm.day} $month ${tm.year}';
 }
 
-void KSnackBar({required String message, required Color bgColor}) {
+void kSnackBar({required String message, required Color bgColor}) {
   Get.showSnackbar(
     GetSnackBar(
       backgroundColor: bgColor,
@@ -105,6 +108,51 @@ void KSnackBar({required String message, required Color bgColor}) {
       dismissDirection: DismissDirection.horizontal,
     ),
   );
+}
+
+Future<bool?> kConfirmDialog({
+  required BuildContext context,
+  required String title,
+  required String negativeActionText,
+  required String positiveActionText,
+}) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
+          ),
+          icon: Icon(Icons.question_mark, color: mainColor,),
+          title: Text(
+            title,
+            style: h2.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: Text(
+                negativeActionText,
+                style: h4.copyWith(
+                  color: kGrey,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Get.back(result: true),
+              child: Text(
+                positiveActionText,
+                style: h4.copyWith(
+                  color: mainColor,
+                ),
+              ),
+            ),
+          ],
+        );
+      });
 }
 
 void kPrint(dynamic data) {

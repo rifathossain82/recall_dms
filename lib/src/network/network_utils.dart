@@ -68,6 +68,11 @@ class Network {
         }
       } else if (response.statusCode == 401) {
         _logout();
+        String msg = "Unauthorized";
+        if (response.body.isNotEmpty) {
+          msg = json.decode(response.body)['errors'];
+        }
+        throw msg;
       } else if (response.statusCode == 500) {
         throw "Server Error";
       } else {
@@ -91,7 +96,6 @@ class Network {
   }
 
   static void _logout(){
-    KSnackBar(message: 'Unauthorized', bgColor: failedColor);
     LocalStorage.removeData(key: LocalStorageKey.token);
     Get.toNamed(RouteGenerator.login);
   }

@@ -51,13 +51,13 @@ class AuthController extends GetxController {
       if (responseBody != null) {
         user.value = UserData.fromJson(responseBody['user']);
         LocalStorage.saveData(key: LocalStorageKey.token, data: responseBody['token']);
-        KSnackBar(message: 'Logged in successfully!', bgColor: successColor);
+        kSnackBar(message: 'Logged in successfully!', bgColor: successColor);
         Get.toNamed(RouteGenerator.dashboard);
       } else {
-        KSnackBar(message: 'Logged in Failed!', bgColor: failedColor);
+        throw 'Logged in Failed!';
       }
     } catch (e) {
-      KSnackBar(message: e.toString(), bgColor: failedColor);
+      kSnackBar(message: e.toString(), bgColor: failedColor);
     } finally {
       isLoading(false);
     }
@@ -75,13 +75,13 @@ class AuthController extends GetxController {
 
       if (responseBody != null) {
         LocalStorage.removeData(key: LocalStorageKey.token);
-        KSnackBar(message: responseBody['message'], bgColor: successColor);
+        kSnackBar(message: responseBody['message'], bgColor: successColor);
         Get.toNamed(RouteGenerator.login);
       } else {
-        KSnackBar(message: 'Logout Failed!', bgColor: failedColor);
+        kSnackBar(message: 'Logout Failed!', bgColor: failedColor);
       }
     } catch (e) {
-      KSnackBar(message: e.toString(), bgColor: failedColor);
+      kSnackBar(message: e.toString(), bgColor: failedColor);
     } finally {
       isLoading(false);
     }
@@ -109,13 +109,13 @@ class AuthController extends GetxController {
 
       if (responseBody != null) {
         LocalStorage.removeData(key: LocalStorageKey.token);
-        KSnackBar(message: 'Password updated successfully.', bgColor: successColor);
+        kSnackBar(message: 'Password updated successfully.', bgColor: successColor);
         Get.toNamed(RouteGenerator.login);
       } else {
-        KSnackBar(message: 'Change Password Failed!', bgColor: failedColor);
+        kSnackBar(message: 'Change Password Failed!', bgColor: failedColor);
       }
     } catch (e) {
-      KSnackBar(message: e.toString(), bgColor: failedColor);
+      kSnackBar(message: e.toString(), bgColor: failedColor);
     } finally {
       isLoading(false);
     }

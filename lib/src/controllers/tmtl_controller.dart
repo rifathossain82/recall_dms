@@ -47,10 +47,10 @@ class TMTLController extends GetxController {
           tmtlList.refresh();
         }
       } else {
-        KSnackBar(message: 'Failed to load data!', bgColor: failedColor);
+        kSnackBar(message: 'Failed to load data!', bgColor: failedColor);
       }
     } catch (e) {
-      KSnackBar(message: e.toString(), bgColor: failedColor);
+      kSnackBar(message: e.toString(), bgColor: failedColor);
     } finally {
       isLoading(false);
     }

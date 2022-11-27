@@ -53,10 +53,10 @@ class VehicleController extends GetxController {
           vehicleList.refresh();
         }
       } else {
-        KSnackBar(message: 'Failed to load data!', bgColor: failedColor);
+        kSnackBar(message: 'Failed to load data!', bgColor: failedColor);
       }
     } catch (e) {
-      KSnackBar(message: e.toString(), bgColor: failedColor);
+      kSnackBar(message: e.toString(), bgColor: failedColor);
     } finally {
       isLoading(false);
     }
