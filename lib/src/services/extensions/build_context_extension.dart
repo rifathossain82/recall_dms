@@ -10,4 +10,7 @@ extension BuildContextExtension on BuildContext{
   );
 
   popScreen() => Navigator.of(this).pop();
+
+  void unFocusKeyboard() => FocusScope.of(this).unfocus();
+
 }

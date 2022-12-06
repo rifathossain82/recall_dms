@@ -45,7 +45,7 @@ class TMTLListScreen extends StatelessWidget {
   }
 
   Widget _buildTMTLAppBar(BuildContext context) {
-    if (tmtlController.isClickListScreenSearch.value) {
+    if (tmtlController.isClickSearch.value) {
       searchFocusNode.requestFocus();
     }
     return KAppBar(
@@ -63,7 +63,7 @@ class TMTLListScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: tmtlController.isClickListScreenSearch.value
+      title: tmtlController.isClickSearch.value
           ? KTextFiled(
               controller: searchController,
               focusNode: searchFocusNode,
@@ -97,10 +97,10 @@ class TMTLListScreen extends StatelessWidget {
 
         /// search and close icon
         GestureDetector(
-          onTap: tmtlController.changeListScreenSearchStatus,
+          onTap: tmtlController.changeSearchStatus,
           child: Padding(
             padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-            child: tmtlController.isClickListScreenSearch.value
+            child: tmtlController.isClickSearch.value
                 ? Icon(
                     Icons.clear,
                     size: 20,
@@ -159,8 +159,8 @@ class TMTLListScreen extends StatelessWidget {
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != tmtlController.selectedDate.value) {
-      tmtlController.changeDateTime(picked);
-      tmtlController.getTMTLList(date: '${picked.month}/${picked.day}/${picked.year}');
+      tmtlController.changeSelectedDateTime(picked);
+      tmtlController.getTMTLList();
       print(picked);
     }
   }
@@ -240,18 +240,22 @@ class TMTLListScreen extends StatelessWidget {
         }
       }
 
-      return ListView.separated(
-        shrinkWrap: true,
-        itemCount: tmtlInDataList.length,
-        itemBuilder: (context, index) {
-          return TMTLItemCard(
-            tmtlData: tmtlInDataList[index],
-          );
-        },
-        separatorBuilder: (context, index) => addVerticalSpace(
-          Dimensions.paddingSizeSmall,
-        ),
-      );
+      if(tmtlInDataList.isEmpty){
+        return const NoDataFound();
+      } else{
+        return ListView.separated(
+          shrinkWrap: true,
+          itemCount: tmtlInDataList.length,
+          itemBuilder: (context, index) {
+            return TMTLItemCard(
+              tmtlData: tmtlInDataList[index],
+            );
+          },
+          separatorBuilder: (context, index) => addVerticalSpace(
+            Dimensions.paddingSizeSmall,
+          ),
+        );
+      }
     }
   }
 
@@ -268,18 +272,22 @@ class TMTLListScreen extends StatelessWidget {
         }
       }
 
-      return ListView.separated(
-        shrinkWrap: true,
-        itemCount: tmtlOutDataList.length,
-        itemBuilder: (context, index) {
-          return TMTLItemCard(
-            tmtlData: tmtlOutDataList[index],
-          );
-        },
-        separatorBuilder: (context, index) => addVerticalSpace(
-          Dimensions.paddingSizeSmall,
-        ),
-      );
+      if(tmtlOutDataList.isEmpty){
+        return const NoDataFound();
+      } else{
+        return ListView.separated(
+          shrinkWrap: true,
+          itemCount: tmtlOutDataList.length,
+          itemBuilder: (context, index) {
+            return TMTLItemCard(
+              tmtlData: tmtlOutDataList[index],
+            );
+          },
+          separatorBuilder: (context, index) => addVerticalSpace(
+            Dimensions.paddingSizeSmall,
+          ),
+        );
+      }
     }
   }
 }

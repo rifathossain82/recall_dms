@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recall/routes/route.dart';
+import 'package:recall/src/controllers/auth_controller.dart';
 import 'package:recall/src/services/local_storage.dart';
 import 'package:recall/src/utils/app_constants.dart';
 import 'package:recall/src/utils/asset_path.dart';
@@ -36,6 +37,8 @@ class _SplashScreenState extends State<SplashScreen>
       if (LocalStorage.getData(key: LocalStorageKey.token) == null) {
         Get.offAllNamed(RouteGenerator.login);
       } else {
+        final AuthController authController = Get.find<AuthController>();
+        await authController.getUserData();
         Get.offAllNamed(RouteGenerator.dashboard);
       }
     }

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:recall/routes/route.dart';
 import 'package:recall/src/controllers/auth_controller.dart';
-import 'package:recall/src/utils/asset_path.dart';
+import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
@@ -53,7 +52,7 @@ class LoginScreen extends StatelessWidget {
 
                   /// login button
                   addVerticalSpace(Get.height * 0.05),
-                  _buildLoginButton(),
+                  _buildLoginButton(context),
                 ],
               );
             }),
@@ -85,8 +84,8 @@ class LoginScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildLoginButton() => KButton(
-        onPressed: _loginMethod,
+  Widget _buildLoginButton(BuildContext context) => KButton(
+        onPressed: () => _loginMethod(context),
         child: authController.isLoading.value
             ? Container(
                 height: 20,
@@ -107,7 +106,8 @@ class LoginScreen extends StatelessWidget {
               ),
       );
 
-  void _loginMethod() {
+  void _loginMethod(BuildContext context) {
+    context.unFocusKeyboard();
     if (emailOrPhoneController.text.isEmpty) {
       kSnackBar(
         message: 'Please enter your phone or email!',

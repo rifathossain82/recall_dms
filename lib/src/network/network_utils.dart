@@ -4,7 +4,6 @@ import 'package:get/get.dart' hide Response;
 import 'package:http/http.dart';
 import 'package:recall/routes/route.dart';
 import 'package:recall/src/services/local_storage.dart';
-import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/views/base/helper.dart';
 
 class Network {
@@ -73,6 +72,8 @@ class Network {
           msg = json.decode(response.body)['errors'];
         }
         throw msg;
+      } else if (response.statusCode == 404) {
+        throw 'Page Not Found!';
       } else if (response.statusCode == 500) {
         throw "Server Error";
       } else {

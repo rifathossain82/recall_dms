@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recall/routes/route.dart';
@@ -10,17 +9,15 @@ import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
 import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
-import 'package:recall/src/views/base/k_button.dart';
 import 'package:recall/src/views/base/k_shadow_button.dart';
 import 'package:recall/src/views/base/k_shadow_outline_button.dart';
 import 'package:recall/src/views/screens/profile/components/dashed_line_painter.dart';
 import 'package:recall/src/views/screens/profile/components/info_card.dart';
-import 'package:recall/src/views/screens/profile/components/info_item.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
 
-  final authController = Get.put(AuthController());
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +56,15 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         children: [
           /// profile image
-          _buildImage(context, null),
+          _buildImage(
+            context,
+            null,
+          ),
           addVerticalSpace(Dimensions.paddingSizeDefault),
 
           /// user name
           Text(
-            'Abdur Rahim',
+            authController.user.value.name ?? 'Not Set',
             style: GoogleFonts.roboto(
               textStyle: h2.copyWith(
                 fontWeight: FontWeight.w700,
@@ -95,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
           addVerticalSpace(Dimensions.paddingSizeExtraLarge),
 
           /// profile info card
-          const ProfileInfoCard(),
+          ProfileInfoCard(user: authController.user.value),
           addVerticalSpace(40),
 
           /// change password button
@@ -159,7 +159,7 @@ class ProfileScreen extends StatelessWidget {
               positiveActionText: 'Logout',
             );
 
-            if(result!){
+            if (result!) {
               authController.logout();
             }
           },

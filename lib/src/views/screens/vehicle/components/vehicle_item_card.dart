@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recall/src/controllers/vehicle_controller.dart';
 import 'package:recall/src/models/vehicle_data.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/utils/asset_path.dart';
@@ -13,12 +14,14 @@ import 'package:recall/src/views/screens/vehicle/vehicle_details_screen.dart';
 
 class VehicleItemCard extends StatelessWidget {
   final VehicleData vehicle;
-  const VehicleItemCard({Key? key, required this.vehicle}) : super(key: key);
+  VehicleItemCard({Key? key, required this.vehicle}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pushNewScreen(VehicleDetailsScreen()),
+      onTap: () {
+        context.pushNewScreen(VehicleDetailsScreen(id: vehicle.id!));
+      },
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
         child: Container(

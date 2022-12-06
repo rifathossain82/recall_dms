@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:recall/src/models/user_data.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/views/screens/profile/components/info_item.dart';
 
 class ProfileInfoCard extends StatelessWidget {
-  const ProfileInfoCard({Key? key}) : super(key: key);
+  final UserData user;
+  const ProfileInfoCard({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +34,19 @@ class ProfileInfoCard extends StatelessWidget {
           children: [
             ProfileInfoItem(
               title: 'Name',
-              data: 'Abdur Rahim',
+              data: user.name ?? 'Not Set',
               onPressed: () {},
             ),
             _buildDivider(),
             ProfileInfoItem(
               title: 'Phone Number',
-              data: '01882508771',
+              data: 'Not Set',
               onPressed: () {},
             ),
             _buildDivider(),
             ProfileInfoItem(
               title: 'Email',
-              data: 'Not Set',
+              data: user.email ?? 'Not Set',
               onPressed: () {},
             ),
           ],

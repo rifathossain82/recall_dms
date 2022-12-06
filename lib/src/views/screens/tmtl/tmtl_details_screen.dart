@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:recall/src/controllers/tmtl_controller.dart';
+import 'package:recall/src/controllers/tmtl_details_controller.dart';
 import 'package:recall/src/models/tmtl_data.dart';
+import 'package:recall/src/models/tmtl_detail_data.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
@@ -18,40 +20,44 @@ class TMTLDetailsScreen extends StatelessWidget {
 
   TMTLDetailsScreen({Key? key, required this.tmtl}) : super(key: key);
 
-  final TMTLController _tmtlController = Get.put(TMTLController());
+  final TMTLDetailsController _tmtlDetailsController =
+      Get.put(TMTLDetailsController());
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
+    _tmtlDetailsController.getTMTLDetails(id: tmtl.id!);
     return Scaffold(
       body: SafeArea(
-        child: Obx(
-          () {
-            return Column(
-              children: [
-                /// appBar content
-                _buildTMTLDetailsAppBar(context),
+        child: Obx(() {
+          return Column(
+            children: [
+              /// appBar content
+              _buildTMTLDetailsAppBar(context),
 
-                /// body content
-                Expanded(
-                  child: _buildTMTLDetailsBody(),
-                ),
-              ],
-            );
-          }
-        ),
+              /// body content
+              Expanded(
+                child: _buildTMTLDetailsBody(),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
 
   Widget _buildTMTLDetailsAppBar(BuildContext context) {
-    if (_tmtlController.isClickDetailsScreenSearch.value) {
+    if (_tmtlDetailsController.isClickSearch.value) {
       _focusNode.requestFocus();
     }
     return KAppBar(
       leading: GestureDetector(
-        onTap: () => context.popScreen(),
+        onTap: () {
+          Get.delete<TMTLDetailsController>();
+          _searchController.clear();
+          context.popScreen();
+        },
         child: Padding(
           padding: EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
           child: Icon(
@@ -60,37 +66,37 @@ class TMTLDetailsScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: _tmtlController.isClickDetailsScreenSearch.value
+      title: _tmtlDetailsController.isClickSearch.value
           ? KTextFiled(
-        controller: _searchController,
-        focusNode: _focusNode,
-        hintText: 'Search here',
-        isBorder: false,
-        onChanged: (value) {
-          print(value);
-        },
-      )
+              controller: _searchController,
+              focusNode: _focusNode,
+              hintText: 'Search here',
+              isBorder: false,
+              onChanged: (value) {
+                print(value);
+              },
+            )
           : Text(
-        'TMTL ${tmtl.id}',
-        style: h2.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+              'TMTL ${tmtl.id}',
+              style: h2.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
       actions: [
         GestureDetector(
-          onTap: _tmtlController.changeDetailsScreenSearchStatus,
+          onTap: _tmtlDetailsController.changeSearchStatus,
           child: Padding(
             padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-            child: _tmtlController.isClickDetailsScreenSearch.value
+            child: _tmtlDetailsController.isClickSearch.value
                 ? Icon(
-              Icons.clear,
-              size: 20,
-              color: mainColor,
-            )
+                    Icons.clear,
+                    size: 20,
+                    color: mainColor,
+                  )
                 : SvgPicture.asset(
-              AssetPath.searchIconSvg,
-              semanticsLabel: 'Search Icon',
-            ),
+                    AssetPath.searchIconSvg,
+                    semanticsLabel: 'Search Icon',
+                  ),
           ),
         ),
       ],
@@ -98,25 +104,24 @@ class TMTLDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildTMTLDetailsBody() {
-    return ListView(
-      children: [
-        _buildItemCard(),
-        addVerticalSpace(Dimensions.paddingSizeExtraLarge),
-        _buildLocationListTile(),
-        Divider(
-          color: mainColor,
-          height: 20,
-          thickness: 0.5,
-        ),
-        _buildBox(),
-        Divider(
-          color: kDividerColor,
-          height: 8,
-          thickness: 1.0,
-        ),
-        addVerticalSpace(Dimensions.paddingSizeExtraLarge),
-      ],
-    );
+    return _tmtlDetailsController.isLoading.value
+        ? const Center(child: CircularProgressIndicator())
+        : ListView(
+            children: [
+              _buildItemCard(),
+              addVerticalSpace(Dimensions.paddingSizeExtraLarge),
+              _buildLocationListTile(),
+              Divider(
+                color: mainColor,
+                height: 20,
+                thickness: 0.5,
+              ),
+              _tmtlDetailsController.tmtlDetails.value.isCurrent == 0
+                  ? _buildBox()
+                  : Container(),
+              addVerticalSpace(Dimensions.paddingSizeExtraLarge),
+            ],
+          );
   }
 
   Widget _buildItemCard() => TMTLItemCard(
@@ -144,7 +149,7 @@ class TMTLDetailsScreen extends StatelessWidget {
             ),
           ),
           title: Text(
-            'dasf',
+            tmtl.locationName ?? '',
             style: h3.copyWith(
               fontWeight: FontWeight.w500,
             ),
@@ -153,14 +158,14 @@ class TMTLDetailsScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '10:00 am',
+                tmtl.assignTime ?? '',
                 style: h4.copyWith(
                   color: mainColor,
                 ),
               ),
               addHorizontalSpace(Dimensions.paddingSizeLarge),
               Text(
-                '02 October 2022',
+                tmtl.assignDate ?? '',
                 style: h4.copyWith(
                   color: mainColor,
                 ),
@@ -170,19 +175,22 @@ class TMTLDetailsScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildBox() => ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: 15,
-        itemBuilder: (context, index) => _buildBoxListTile(),
-        separatorBuilder: (context, index) => Divider(
-          color: kDividerColor,
-          height: 8,
-          thickness: 1.0,
-        ),
-      );
+  Widget _buildBox() {
+    final List<NBL1> nblList = _tmtlDetailsController.tmtlDetails.value.tmtlItems.nBL1;
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: nblList.length,
+      itemBuilder: (context, index) => _buildBoxListTile(nblList[index]),
+      separatorBuilder: (context, index) => Divider(
+        color: kDividerColor,
+        height: 8,
+        thickness: 1.0,
+      ),
+    );
+  }
 
-  Widget _buildBoxListTile() => Padding(
+  Widget _buildBoxListTile(NBL1 nbl1) => Padding(
         padding: EdgeInsets.symmetric(
           horizontal: Dimensions.paddingSizeDefault,
         ),
@@ -200,7 +208,7 @@ class TMTLDetailsScreen extends StatelessWidget {
                 SvgPicture.asset(AssetPath.boxIcon, semanticsLabel: 'Box Icon'),
           ),
           title: Text(
-            'Box -001',
+            nbl1.boxCode ?? '',
             style: h3.copyWith(
               fontWeight: FontWeight.w500,
             ),

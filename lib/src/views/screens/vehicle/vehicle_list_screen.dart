@@ -43,7 +43,7 @@ class VehicleListScreen extends StatelessWidget {
   }
 
   Widget _buildVehicleListAppBar(BuildContext context) {
-    if(vehicleController.isClickListScreenSearch.value){
+    if(vehicleController.isClickSearch.value){
       searchFocusNode.requestFocus();
     }
     return KAppBar(
@@ -60,7 +60,7 @@ class VehicleListScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: vehicleController.isClickListScreenSearch.value
+      title: vehicleController.isClickSearch.value
           ? KTextFiled(
         controller: searchController,
         focusNode: searchFocusNode,
@@ -78,10 +78,10 @@ class VehicleListScreen extends StatelessWidget {
       actions: [
         /// search and close icon
         GestureDetector(
-          onTap: vehicleController.changeListScreenSearchStatus,
+          onTap: vehicleController.changeSearchStatus,
           child: Padding(
             padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-            child: vehicleController.isClickListScreenSearch.value
+            child: vehicleController.isClickSearch.value
                 ? Icon(
               Icons.clear,
               size: 20,
@@ -103,7 +103,7 @@ class VehicleListScreen extends StatelessWidget {
           /// date and calender widget
           KDate(
             onPressed: () => _selectDate(context),
-            dateTime: vehicleController.listScreenDate.value,
+            dateTime: vehicleController.selectedDate.value,
           ),
 
           /// vehicle list
@@ -134,14 +134,14 @@ class VehicleListScreen extends StatelessWidget {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: vehicleController.listScreenDate.value,
+      initialDate: vehicleController.selectedDate.value,
       firstDate: DateTime(2010),
       lastDate: DateTime(2100),
     );
     if (picked != null &&
-        picked != vehicleController.listScreenDate.value) {
-      vehicleController.changeListScreenDateTime(picked);
-      vehicleController.getVehicleList(date: '${picked.month}/${picked.day}/${picked.year}');
+        picked != vehicleController.selectedDate.value) {
+      vehicleController.changeSelectedDateTime(picked);
+      vehicleController.getVehicleList();
       kPrint('${picked.month}/${picked.day}/${picked.year}');
     }
   }

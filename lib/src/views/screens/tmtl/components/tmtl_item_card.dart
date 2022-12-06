@@ -85,7 +85,7 @@ class TMTLItemCard extends StatelessWidget {
                       ),
                       addVerticalSpace(4),
                       Text(
-                        tmtlData.address!,
+                        tmtlData.locationName!,
                         style: GoogleFonts.roboto(
                           textStyle: h4.copyWith(
                             color: kBlackLight,

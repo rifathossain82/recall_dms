@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:recall/routes/route.dart';
-import 'package:recall/src/controllers/auth_controller.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
 import 'package:recall/src/utils/styles.dart';
-import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_badge.dart';
 import 'package:recall/src/views/screens/home/home_screen.dart';
 import 'package:recall/src/views/screens/notification/notification_screen.dart';
@@ -17,14 +14,12 @@ import 'package:recall/src/views/screens/profile/profile_screen.dart';
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({Key? key}) : super(key: key);
 
-  final PersistentTabController _controller =
-      PersistentTabController(initialIndex: 0);
-  final AuthController authController = Get.put(AuthController());
+  final PersistentTabController _controller = PersistentTabController(initialIndex: 0);
 
   List<Widget> _buildScreens() {
     return [
-      const HomeScreen(),
-      const NotificationScreen(),
+      HomeScreen(),
+      NotificationScreen(),
       ProfileScreen(),
     ];
   }
@@ -32,7 +27,7 @@ class DashboardScreen extends StatelessWidget {
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
+        icon: const Icon(Icons.home),
         title: "Home",
         textStyle: GoogleFonts.quicksand(
           textStyle: h5.copyWith(
@@ -47,7 +42,7 @@ class DashboardScreen extends StatelessWidget {
           bgColor: kRed,
           top: 4,
           right: 4,
-          child: Icon(Icons.notifications),
+          child: const Icon(Icons.notifications),
         ),
         title: "Notification",
         textStyle: GoogleFonts.quicksand(
@@ -59,7 +54,7 @@ class DashboardScreen extends StatelessWidget {
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.account_box),
+        icon: const Icon(Icons.person_outline),
         title: "Profile",
         textStyle: GoogleFonts.quicksand(
           textStyle: h5.copyWith(

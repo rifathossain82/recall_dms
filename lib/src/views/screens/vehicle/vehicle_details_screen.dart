@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:recall/src/controllers/vehicle_controller.dart';
+import 'package:recall/src/controllers/vehicle_details_controller.dart';
 import 'package:recall/src/models/stepper_data_model.dart';
+import 'package:recall/src/models/vehicle_detail_data.dart';
 import 'package:recall/src/services/extensions/build_context_extension.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
@@ -12,46 +13,48 @@ import 'package:recall/src/views/base/helper.dart';
 import 'package:recall/src/views/base/k_appbar.dart';
 import 'package:recall/src/views/base/k_date.dart';
 import 'package:recall/src/views/base/k_text_field.dart';
+import 'package:recall/src/views/base/no_data_found.dart';
 import 'package:recall/src/views/screens/vehicle/components/custom_stepper.dart';
 
 class VehicleDetailsScreen extends StatelessWidget {
-  VehicleDetailsScreen({Key? key}) : super(key: key);
+  final int id;
 
-  final vehicleController = Get.put(VehicleController());
-  TextEditingController searchController = TextEditingController();
+  VehicleDetailsScreen({Key? key, required this.id}) : super(key: key);
+
+  final vehicleDetailsController = Get.put(VehicleDetailsController());
+  final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
+    vehicleDetailsController.getVehicleDetails(id: id);
     return Scaffold(
       body: SafeArea(
-        child: Obx(
-          () {
-            return Column(
-              children: [
-                /// appBar content
-                _buildVehicleDetailsAppBar(context),
+        child: Obx(() {
+          return Column(
+            children: [
+              /// appBar content
+              _buildVehicleDetailsAppBar(context),
 
-                /// body content
-                Expanded(
-                  child: _buildVehicleDetailsBody(context),
-                ),
-              ],
-            );
-          }
-        ),
+              /// body content
+              Expanded(
+                child: _buildVehicleDetailsBody(context),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
 
   Widget _buildVehicleDetailsAppBar(BuildContext context) {
-    if(vehicleController.isClickDetailsScreenSearch.value){
+    if (vehicleDetailsController.isClickSearch.value) {
       searchFocusNode.requestFocus();
     }
-    return  KAppBar(
+    return KAppBar(
       leading: GestureDetector(
         onTap: () {
-          Get.delete<VehicleController>();
+          Get.delete<VehicleDetailsController>();
           context.popScreen();
         },
         child: Padding(
@@ -62,36 +65,37 @@ class VehicleDetailsScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: vehicleController.isClickDetailsScreenSearch.value
+      title: vehicleDetailsController.isClickSearch.value
           ? KTextFiled(
-        controller: searchController,
-        focusNode: searchFocusNode,
-        hintText: 'Search here',
-        isBorder: false,
-        onChanged: (value) {
-          print(value);
-        },
-      ) : Text(
-        'Vehicle 001',
-        style: h2.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+              controller: searchController,
+              focusNode: searchFocusNode,
+              hintText: 'Search here',
+              isBorder: false,
+              onChanged: (value) {
+                print(value);
+              },
+            )
+          : Text(
+              'Vehicle  $id',
+              style: h2.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
       actions: [
         GestureDetector(
-          onTap: vehicleController.changeDetailsScreenSearchStatus,
+          onTap: vehicleDetailsController.changeSearchStatus,
           child: Padding(
             padding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-            child: vehicleController.isClickDetailsScreenSearch.value
+            child: vehicleDetailsController.isClickSearch.value
                 ? Icon(
-              Icons.clear,
-              size: 20,
-              color: mainColor,
-            )
+                    Icons.clear,
+                    size: 20,
+                    color: mainColor,
+                  )
                 : SvgPicture.asset(
-              AssetPath.searchIconSvg,
-              semanticsLabel: 'Search Icon',
-            ),
+                    AssetPath.searchIconSvg,
+                    semanticsLabel: 'Search Icon',
+                  ),
           ),
         ),
       ],
@@ -104,7 +108,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           /// date and calender widget
           KDate(
             onPressed: () => _selectDate(context),
-            dateTime: vehicleController.detailsScreenDate.value,
+            dateTime: vehicleDetailsController.selectedDate.value,
           ),
 
           /// stepper
@@ -120,63 +124,69 @@ class VehicleDetailsScreen extends StatelessWidget {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: vehicleController.detailsScreenDate.value,
+      initialDate: vehicleDetailsController.selectedDate.value,
       firstDate: DateTime(2010),
       lastDate: DateTime(2100),
     );
     if (picked != null &&
-        picked != vehicleController.detailsScreenDate.value) {
-      vehicleController.changeDetailsScreenDateTime(picked);
+        picked != vehicleDetailsController.selectedDate.value) {
+      vehicleDetailsController.changeSelectedDateTime(picked);
+      vehicleDetailsController.getVehicleDetails(id: id);
       kPrint('${picked.month}/${picked.day}/${picked.year}');
     }
   }
 
   Widget _buildStepper() {
-    final stepperDataList = [
-      StepperData(
-        isDone: true,
-        content: Column(
-          children: [
-            _buildLocationListTile(true),
-            _buildBox(true),
-          ],
-        ),
-      ),
-      StepperData(
-        isDone: true,
-        content: Column(
-          children: [
-            _buildLocationListTile(true),
-            _buildBox(true),
-          ],
-        ),
-      ),
-      StepperData(
-        isDone: false,
-        content: Column(
-          children: [
-            _buildLocationListTile(false),
-            _buildBox(false),
-          ],
-        ),
-      ),
-    ];
+    if (vehicleDetailsController.isLoading.value) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (vehicleDetailsController.routeList.isEmpty) {
+      return const NoDataFound();
+    } else {
+      var stepperDataList = [];
+      for (RouteData route in vehicleDetailsController.routeList) {
+        stepperDataList.add(
+          StepperData(
+            isDone: true,
+            content: Column(
+              children: [
+                _buildLocationListTile(
+                  address: route.locationName ?? '',
+                  totalItem: route.tmtlCount ?? 0,
+                  time: route.assignTime ?? '',
+                  isComplete: true,
+                ),
+                _buildBox(
+                  tmtlList: route.routeTMTLs ?? [],
+                  isComplete: true,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
 
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: Dimensions.paddingSizeDefault,
-      ),
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: stepperDataList.length,
-        itemBuilder: (context, index) {
-          return CustomStepper(stepperData: stepperDataList[index]);
-        },
-      ),
-    );
+      return Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.paddingSizeDefault,
+        ),
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: stepperDataList.length,
+          itemBuilder: (context, index) {
+            return CustomStepper(stepperData: stepperDataList[index]);
+          },
+        ),
+      );
+    }
   }
 
-  Widget _buildLocationListTile(bool isComplete) => ListTile(
+  Widget _buildLocationListTile({
+    required String address,
+    required int totalItem,
+    required String time,
+    required bool isComplete,
+  }) =>
+      ListTile(
         contentPadding: EdgeInsets.zero,
         leading: Container(
           height: 49,
@@ -193,7 +203,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           ),
         ),
         title: Text(
-          'Uttara, Dhaka',
+          address,
           style: h3.copyWith(
             fontWeight: FontWeight.w500,
           ),
@@ -203,7 +213,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '10:00 am   02 October 2022',
+              '$totalItem Items     $time',
               maxLines: 1,
               style: h4.copyWith(
                 color: isComplete ? mainColor : kInActiveColor,
@@ -220,14 +230,17 @@ class VehicleDetailsScreen extends StatelessWidget {
         ),
       );
 
-  Widget _buildBox(bool isComplete) {
+  Widget _buildBox({
+    required List<RouteTMTL> tmtlList,
+    required bool isComplete,
+  }) {
     return Column(
       children: [
         ...List.generate(
-          2,
+          tmtlList.length,
           (index) => Column(
             children: [
-              _buildBoxListTile(isComplete),
+              _buildBoxListTile(tmtlList[index], isComplete),
               Divider(
                 color: kDividerColor,
                 height: 8,
@@ -241,7 +254,7 @@ class VehicleDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBoxListTile(bool isComplete) => ListTile(
+  Widget _buildBoxListTile(RouteTMTL tmtl, bool isComplete) => ListTile(
         contentPadding: EdgeInsets.zero,
         leading: Container(
           height: 49,
@@ -259,7 +272,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           ),
         ),
         title: Text(
-          'TMTL -001',
+          'TMTL -${tmtl.id}',
           style: h3.copyWith(
             fontWeight: FontWeight.w500,
             color: isComplete ? null : kInActiveColor,
@@ -271,7 +284,7 @@ class VehicleDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '3 Box',
+              '${tmtl.tmtlItemsCount} Box',
               style: h4.copyWith(
                 fontWeight: FontWeight.w500,
                 color: kInActiveColor,
@@ -288,7 +301,7 @@ class VehicleDetailsScreen extends StatelessWidget {
             ),
             addHorizontalSpace(Dimensions.paddingSizeSmall),
             Text(
-              '(CBL)',
+              '(${tmtl.clientShortCode})',
               style: h4.copyWith(
                 fontWeight: FontWeight.w500,
                 color: isComplete ? kBlueGrey : kInActiveColor,

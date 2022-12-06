@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:recall/src/controllers/auth_controller.dart';
 import 'package:recall/src/utils/asset_path.dart';
 import 'package:recall/src/utils/color.dart';
 import 'package:recall/src/utils/dimensions.dart';
@@ -13,7 +15,8 @@ import 'package:recall/src/views/screens/vehicle/vehicle_list_screen.dart';
 import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
+  final AuthController authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +70,16 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Welcome Masud Rana',
-                textAlign: TextAlign.start,
-                style: h2.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+              Obx(
+                () {
+                  return Text(
+                    'Welcome ${authController.user.value.name ?? ''}',
+                    textAlign: TextAlign.start,
+                    style: h2.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  );
+                }
               ),
               addVerticalSpace(Dimensions.paddingSizeExtraSmall),
               Text(

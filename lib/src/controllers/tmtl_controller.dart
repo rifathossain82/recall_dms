@@ -8,17 +8,14 @@ import 'package:recall/src/views/base/helper.dart';
 class TMTLController extends GetxController {
   var tabBarIndex = 0.obs;
   Rx<DateTime> selectedDate = DateTime.now().obs;
-  var isClickListScreenSearch = false.obs;
-  var isClickDetailsScreenSearch = false.obs;
+  var isClickSearch = false.obs;
+
   var isLoading = false.obs;
   var tmtlList = [].obs;
 
-  changeIndex(int index) => tabBarIndex.value = index;
-
-  changeDateTime(DateTime dateTime) => selectedDate.value = dateTime;
-
-  void changeListScreenSearchStatus() => isClickListScreenSearch.value = !isClickListScreenSearch.value;
-  void changeDetailsScreenSearchStatus() => isClickDetailsScreenSearch.value = !isClickDetailsScreenSearch.value;
+  void changeIndex(int index) => tabBarIndex.value = index;
+  changeSelectedDateTime(DateTime dateTime) => selectedDate.value = dateTime;
+  void changeSearchStatus() => isClickSearch.value = !isClickSearch.value;
 
   @override
   void onInit() {
@@ -26,13 +23,14 @@ class TMTLController extends GetxController {
     getTMTLList();
   }
 
-  void getTMTLList({String? date}) async {
+  void getTMTLList() async {
     try {
       isLoading(true);
       tmtlList.value = [];
 
+      final date = selectedDate.value;
       var map = <String, dynamic>{};
-      map['date'] = date;
+      map['date'] = '${date.month}/${date.day}/${date.year}';
 
       dynamic responseBody = await Network.handleResponse(
         await Network.getRequest(
